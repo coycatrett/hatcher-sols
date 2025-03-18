@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hatcher Solutions - Alg.Top.</title>
+
+        <!-- Scripts -->
+
+        <!-- Load MathJax config and MathJax -->
+        <script src="js/mathjax-config.js" async></script>
+
+        <!-- Load TikZJax (for diagramming) -->
+        <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+        <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+        <!-- Load Marked (markdown interpreter) -->
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        
+        <!-- Script for loading solutions -->
+        <script type="module" src="js/markdown.js" async></script>
+        <!-- <script type="module" src="sols/0/1/1.js" async></script> -->
+    </head>
+
+    <body>
+        <!-- Landing Page -->
+
+        Here is some $\LaTeX$: \(\oint_{S^1} f(z)\mathrm{d}z\)
+
+        <div id="solution-container"></div>
+
+    </body>
+    
+    <script type="text/tikz" async>
+        \begin{tikzcd}
+            A \arrow[r, "\phi"] \arrow[d, red] \arrow[dr, "\delta"]
+            & B \arrow[d, "\psi" red] \\
+            C \arrow[r, red, "\eta" blue]
+            & |[blue, rotate=-15]| D
+        \end{tikzcd}
+    </script>
+</html>
