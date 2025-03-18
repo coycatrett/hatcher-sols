@@ -1,4 +1,5 @@
-// Config
+// TODO comment this config file
+// MathJax Config
 window.MathJax = {
     loader: {
       load: ['[tex]/amscd']
