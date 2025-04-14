@@ -1,10 +1,7 @@
 /** Controls and configures how markdown is handled withing the document **/
-async function loadMarkdown(filename) {
+async function loadSol(filename) {
     const response = await fetch(filename);
     const solution = await response.text();
-
-    // Convert Markdown to HTML
-    // const html = marked.parse(text);
 
     // Insert into the page
     // TODO: parse filename to obtain id or add new arguments
@@ -12,7 +9,7 @@ async function loadMarkdown(filename) {
 }
 
 // Example: Load a markdown file when page loads
-loadMarkdown("../sols/0/1/1.html");
+// loadSol("../sols/0/1/1.html");
 
 
 // solution only needs to load markdown if on that page
