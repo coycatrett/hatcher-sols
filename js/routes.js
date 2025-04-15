@@ -37,11 +37,7 @@ const routes = {
 }
 
 
-
-
-
 /**
- * // TODO
  * Need to be able to match routes.
  * Splitting routes into these categories:
  *  - Home Page
@@ -115,7 +111,7 @@ const matchRoute = (location) => {
         return ["/chapter-:chptr/section-:sec/exercise-:exer", chptr, sec, exer];
     }
 
-    console.log(404)
+    // console.log("404 Error");
 
     return [404, chptr, sec, exer];
 
@@ -132,81 +128,72 @@ const route = (event) => {
 
 const locationHandler = async () => {
     var location = window.location.pathname;
-    console.log('location: ', location);
+
+    // console.log('location: ', location);
 
     if (location.length == 0) {
         location = '/';
     }
 
     var params = matchRoute(location);
-    console.log("params", params);
     var route = routes[params[0]];
     var chptr = params[1];
     var sec = params[2];
     var exer = params[3];
 
-    var template = route.template;
-    template = template.replaceAll("{chptr}", chptr);
-    template = template.replaceAll("{sec}", sec);
-    template = template.replaceAll("{exer}", exer);
-
-    console.log(routes);
-    console.log("route", route);
+    var template = route.template.replaceAll("{chptr}", chptr)
+                                 .replaceAll("{sec}", sec)
+                                 .replaceAll("{exer}", exer);
 
     const response = await fetch(template);
 
     if (!response.ok) {
-        console.log("bad response");
         route = routes[404];
-        const errorPage = await fetch("/404.html").then(response => response.text());
+        const errorPage = await fetch("404.html").then(response => response.text());
         document.getElementById("solution-container").innerHTML = errorPage;
         document.title = route.title;
         document.querySelector('meta[name="description"]').setAttribute("content", route.description);
     }
-    else {
-        console.log('routes[', params[0], ']', route);
 
+    else {
         const html = await response.text();
     
         document.getElementById("solution-container").innerHTML = html;
         
-        var title = route.title;
-        title = title.replaceAll("{chptr}", chptr);
-        title = title.replaceAll("{sec}", sec);
-        title = title.replaceAll("{exer}", exer);
+        document.title = route.title.replaceAll("{chptr}", chptr)
+                                     .replaceAll("{sec}", sec)
+                                     .replaceAll("{exer}", exer);
     
-        
-        var description = route.description;
-        description = description.replaceAll("{chptr}", chptr);
-        description = description.replaceAll("{sec}", sec);
-        description = description.replaceAll("{exer}", exer);
+        var description = route.description.replaceAll("{chptr}", chptr)
+                                           .replaceAll("{sec}", sec)
+                                           .replaceAll("{exer}", exer);
     
-    
-        document.title = title;
         document.querySelector('meta[name="description"]').setAttribute("content", description);
     }
 }
 
 
 document.addEventListener('click', (e) => {
-    const anchor = e.target.closest('a'); // This safely finds the closest <a>
-    if (anchor) {
+    const { target } = e;
+    if (target.matches('a')) {
         e.preventDefault();
         route(e);
     }
-});
-
-
-// document.addEventListener('click', (e) => {
-//     const { target } = e;
-//     if (target.matches('a')) {
-//         e.preventDefault();
-//         route(e);
-//     }
-//     return;
-// })
+    return;
+})
 
 
 window.onpopstate = locationHandler;
 window.route = route;
 locationHandler();
+
+
+/**
+ * for when you deploy on vercel in the vercel.json file
+ * 
+ * {
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+ */
