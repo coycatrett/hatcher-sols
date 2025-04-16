@@ -10,14 +10,12 @@
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
         <!-- Scripts -->
+         <!-- TODO Figure out the correct way to load JQuery and MathJax without CDN's, if it is even a problem -->
+        <!-- Load JQuery --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
         <!-- Load MathJax config and MathJax -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="/js/mathjax-config.js" defer></script>
-
-        <!-- Load TikZJax (for diagramming) -->
-        <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
-        <script src="https://tikzjax.com/v1/tikzjax.js" defer></script>
 
         <script type="module" src="/js/index.js" defer></script>
         
@@ -25,8 +23,6 @@
         <script type="module" src="/js/sols.js" async></script>
 
          <script src="/js/routes.js" defer></script>
-
-        
     </head>
 
     <body>
@@ -62,13 +58,4 @@
         <div id="solution-container"></div>
 
     </body>
-<!--     
-    <script type="text/tikz" async>
-        \begin{tikzcd}
-            A \arrow[r, "\phi"] \arrow[d, red] \arrow[dr, "\delta"]
-            & B \arrow[d, "\psi" red] \\
-            C \arrow[r, red, "\eta" blue]
-            & |[blue, rotate=-15]| D
-        \end{tikzcd}
-    </script> -->
 </html>
