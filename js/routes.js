@@ -1,3 +1,4 @@
+// TODO: Add support for the Additional Topics sections in each chapter
 const routes = {
     404: {
         template: '/404.html',
@@ -11,35 +12,35 @@ const routes = {
         description: 'Hatcher Algebraic Topology Solutions Home Page'
     },
 
-    '/chapter-:chptr': {
-        template: '/sols/{chptr}/{chptr}.html',
-        title: 'Chapter {chptr}',
-        description: 'Chapter {chptr} Exercises'
+    '/chapter-chptr': {
+        template: '/sols/chptr/chptr.html',
+        title: 'Chapter chptr',
+        description: 'Chapter chptr Exercises'
     },
 
-    '/chapter-:chptr/section-:sec': {
-        template: '/sols/{chptr}/{sec}/{sec}.html',
-        title: 'Chapter {chptr} Section {sec}',
-        description: 'Chapter {chptr} Section {Sec} Exercises'
+    '/chapter-chptr/section-sec': {
+        template: '/sols/chptr/sec/sec.html',
+        title: 'Chapter chptr Section sec',
+        description: 'Chapter chptr Section sec Exercises'
     },
 
-    '/chapter-:chptr/section-:sec/exercise-:exer': {
-        template: '/sols/{chptr}/{sec}/{exer}/{exer}.html',
-        title: 'Chapter {chptr} Section {sec}',
-        description: 'Chapter {chptr} Section {Sec} Exercise {exer}'
+    '/chapter-chptr/exercise-exer': {
+        template: '/sols/chptr/exer/exer.html',
+        title: 'Chapter chptr Section exer',
+        description: 'Chapter chptr Exercise exer'
     },
 
-    '/chapter-:chptr/exercise-:exer': {
-        template: '/sols/{chptr}/{exer}/{exer}.html',
-        title: 'Chapter {chptr} Section {exer}',
-        description: 'Chapter {chptr} Exercise {exer}'
+    '/chapter-chptr/section-sec/exercise-exer': {
+        template: '/sols/chptr/sec/exer/exer.html',
+        title: 'Chapter chptr Section sec Exercise exer',
+        description: 'Chapter chptr Section sec Exercise exer'
     },
 }
 
 
 /**
  * Need to be able to match routes.
- * Splitting routes into these categories:
+ * Routes are split into these categories:
  *  - Home Page
  *  - Chapter Page
  *  - Chapter-Section Page
@@ -50,31 +51,37 @@ const routes = {
  * My matching function needs to be able to distinguish these categories based on the location
  * they will be denoted as follows:
  * 
- * Home Page:
- * Chapter Page: /chapter-{chptr}
- * Chapter-Section Page: /chapter-{chptr}/section-{sec}
- * Chapter-Section-Solution Page: /chapter-{chptr}/section-{sec}/exercise-{exer}
- * Chapter-Solution Page: /chapter-{chptr}/exercise-{exer}
- * 404 Page: 404.html
- * 
+ * - Home Page: /
+ * - Chapter Page: /chapter-chptr
+ * - Chapter-Section Page: /chapter-chptr/section-sec
+ * - Chapter-Section-Solution Page: /chapter-chptr/section-sec/exercise-exer
+ * - Chapter-Solution Page: /chapter-chptr/exercise-exer
+ * - 404 Page: 404.html
  * 
  * On return of the class/type of the page, we load the content based on it
  * 
- * The basic control flow would be: 
+ * The basic control flow is:
  *  1. match the pattern of the url to one of the routes above
- *  2. replace the template, title, and description parameters with the correct ones (using the .replace function)
- *  3. return
+ *  2. replace the template, title, and description parameters with the correct ones
  */
 
-const matchRoute = (location) => {
-    if (location.length == 0 || location == "/index.html" || location == "/") {
+
+ /**
+  * Matches each ``location`` to one of the routes in ``routes``.
+  * 
+  * If ``location`` is not matched, returns a 404 error.
+ * @param {String} [location] - window location pathname
+ */
+function matchRoute(location) {
+    if (location.length == 0 || location == "/") {
         return '/';
     }
 
+    const chptrPattern = /(\/chapter-([0-4]{1}))/;
+    const secPattern = /(\/section-(\d+))?/;
+    const exerPattern = /(\/exercise-(\d+))?/;
 
-    let matches = null;
-    // TODO separate regex patterns into smaller parts at use regexPattern.source to concatenate them
-    const match = location.match(/(\/chapter-([0-4]{1}))(\/section-([0-9]+))?(\/exercise-([0-9]+))?$/);
+    const match = location.match(chptrPattern.source + secPattern.source + exerPattern.source + /$/.source);  // $ to search until end of string
     
     if (!match) {
         return [404, null, null, null];
@@ -82,46 +89,74 @@ const matchRoute = (location) => {
     
     let [chptr, sec, exer] = [match[2], match[4], match[6]];
 
-    if (match) {
-        console.log("location matched with new regex");
-        console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
-        console.log("chapter:", chptr);
-        console.log("section:", sec);
-        console.log("exercise:", exer);
-    }
+    // if (match) {
+    //     console.log("location matched with new regex");
+    //     console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
+    //     console.log("chapter:", chptr);
+    //     console.log("section:", sec);
+    //     console.log("exercise:", exer);
+    // }
 
     let template = "";
 
-    if (sec === undefined && exer === undefined) {
-       template = "/chapter-:chptr";
-    } 
+    if (sec === undefined && exer === undefined) template = "/chapter-chptr";
     
-    else if (exer === undefined) {
-        template = "/chapter-:chptr/section-:sec";
-    }
+    else if (exer === undefined) template = "/chapter-chptr/section-sec";
 
-    else if (sec === undefined) {
-        template = "/chapter-:chptr/exercise-:exer";
-    }
+    else if (sec === undefined) template = "/chapter-chptr/exercise-exer";
 
-    else {
-        template = "/chapter-:chptr/section-:sec/exercise-:exer";
-    }
+    else template = "/chapter-chptr/section-sec/exercise-exer";
 
     return [template, chptr, sec, exer];
 }
 
 
-const route = (event) => {
-    event = event || window.event;
-    event.preventDefault();
-    window.history.pushState({}, '', event.target.href);
-    locationHandler();
+/**
+ * document.title = fillAndReplace(route.title, /chptr|sec|exer/g, { ``chptr``, ``sec``, ``exer`` });
+ * 
+ * has the same effect as 
+ * 
+ * document.title = route.title.replaceAll("chptr", ``chptr``).replaceAll("sec", ``sec``).replaceAll("exer", ``exer``);
+ * 
+ * if ``chptr``, ``sec``, and ``exer`` have been given values
+ * @param {string} [text] - The text whose words are being replaced
+ * @param {RegExp} [targets] - The targets to be replaced
+ * @param {Record<string, string>} [values] - The values to replace the targeted words
+ * @returns The string text with its targets replaced by the values
+ */
+function fillAndReplace(text, targets, values) {
+    return text.replace(targets, match => values[match]);
 }
 
 
-const locationHandler = async () => {
-    var location = window.location.pathname;
+/**
+ * Required to re-render dynamically loaded MathJax
+ * 
+ * See [MathJax.typesetPromise documentation](https://docs.mathjax.org/en/latest/web/typeset.html)
+ * @param {HTMLElement} [container] - The HTMLElement containing the MathJax to be re-rendered
+ */
+function renderMathJax(container = document.body) {
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([container])
+        // .then(() => console.log("MathJax rendered"))
+        .catch(err => console.error("MathJax render error:", err));
+    }
+    else {
+    //   console.log("MathJax not ready, retrying...");
+      setTimeout(() => renderMathJax(container), 100);
+    }
+}
+
+
+/**
+ * Routes the current window.location.pathname to one of the routes in ``routes``
+ * and fetches the html at that specific route
+ * 
+ * The inner html for the spa content is changed along with the title and description of the page
+ * @returns
+ */
+async function locationHandler() {
+    let location = window.location.pathname;
 
     // console.log('location: ', location);
 
@@ -129,23 +164,25 @@ const locationHandler = async () => {
         location = '/';
     }
 
-    var params = matchRoute(location);
-    console.log("params", params);
-    var route = routes[params[0]];
-    var chptr = params[1];
-    var sec = params[2];
-    var exer = params[3];
+    let params = matchRoute(location);
+    let route = routes[params[0]];
+    let chptr = params[1];
+    let sec = params[2];
+    let exer = params[3];
+
+    const values = { chptr, sec, exer };
+    const targets = /chptr|sec|exer/g;
+    
+    // console.log("params", params);
 
 
-    var template = route.template.replaceAll("{chptr}", chptr)
-                                 .replaceAll("{sec}", sec)
-                                 .replaceAll("{exer}", exer);
+    let template = fillAndReplace(route.template, targets, values);
 
-    console.log("template: ", template);
+    // console.log("template: ", template);
 
     const response = await fetch(template);
 
-    console.log("response: ", response);
+    // console.log("response: ", response);
 
     if (!response.ok) {
         route = routes[404];
@@ -153,53 +190,65 @@ const locationHandler = async () => {
         document.getElementById("solution-container").innerHTML = errorPage;
         document.title = route.title;
         document.querySelector('meta[name="description"]').setAttribute("content", route.description);
+        return;
     }
 
-    else {
-        const html = await response.text();
-    
-        document.getElementById("solution-container").innerHTML = html;
-        renderMathJax(document.getElementById("solution-container"));
-        
-        document.title = route.title.replaceAll("{chptr}", chptr)
-                                     .replaceAll("{sec}", sec)
-                                     .replaceAll("{exer}", exer);
-    
-        var description = route.description.replaceAll("{chptr}", chptr)
-                                           .replaceAll("{sec}", sec)
-                                           .replaceAll("{exer}", exer);
-    
-        document.querySelector('meta[name="description"]').setAttribute("content", description);
-    }
+    const html = await response.text();
+
+    document.getElementById("solution-container").innerHTML = html;
+    renderMathJax(document.getElementById("solution-container"));
+
+    document.title = fillAndReplace(route.title, targets, values);
+
+    let description = fillAndReplace(route.description, targets, values);
+
+    document.querySelector('meta[name="description"]').setAttribute("content", description);
 }
 
 
-function renderMathJax(container = document.body) {
-    if (window.MathJax && MathJax.typesetPromise) {
-      MathJax.typesetPromise([container])
-        .then(() => console.log("MathJax rendered"))
-        .catch(err => console.error("MathJax render error:", err));
-    } else {
-      // Try again later
-      console.log("MathJax not ready, retrying...");
-      setTimeout(() => renderMathJax(container), 100);
-    }
-  }
+/**
+ * Handles client-side routing by intercepting a link click event,
+ * preventing the default browser behavior (full page reload),
+ * updating the URL using the History API, and calling the route handler.
+ *
+ * @param {MouseEvent} [event] - The click event triggered by a navigation link.
+ *                                If not provided, falls back to `window.event`.
+ */
+function route(event) {
+    // event = event || window.event;
+    event.preventDefault();
+    window.history.pushState({}, '', event.target.href);
+    locationHandler();
+}
 
+
+/**
+ * Listens for click events on anchor (`<a>`) tags to override the default routing behavior.
+ * Instead of following the link, it calls the custom `route` function for client-side navigation.
+ *
+ * @param {Event} e - The click event triggered by the user.
+ */
 document.addEventListener('click', (e) => {
     const { target } = e;
     if (target.matches('a')) {
         e.preventDefault();
         route(e);
     }
-    return;
-})
+});
 
 
+// Set the onpopstate event handler to the locationHandler function.
+// This triggers locationHandler whenever the browser's history state changes,
+// such as when the user navigates using the back/forward buttons.
 window.onpopstate = locationHandler;
-window.route = route;
-locationHandler();
 
+// Assign the route function to the global window object.
+// This makes the route function accessible anywhere in the app, allowing for custom navigation.
+window.route = route;
+
+// Call locationHandler immediately to ensure the page content is initialized correctly
+// based on the current state or URL when the page is loaded or refreshed.
+locationHandler();
 
 /**
  * for when you deploy on vercel in the vercel.json file
