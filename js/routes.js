@@ -1,6 +1,6 @@
 const routes = {
     404: {
-        template: '404.html',
+        template: '/404.html',
         title: '404',
         description: 'Page not found!'
     },
@@ -72,49 +72,43 @@ const matchRoute = (location) => {
     }
 
 
-    var chptr = null;
-    var sec = null;
-    var exer = null;
-
-
     let matches = null;
-
+    // TODO separate regex patterns into smaller parts at use regexPattern.source to concatenate them
+    const match = location.match(/(\/chapter-([0-4]{1}))(\/section-([0-9]+))?(\/exercise-([0-9]+))?$/);
     
-    if (/\/chapter-(\d)+/.test(location)) {  // chapter-{chptr}
-        matches = location.match(/\/chapter-(\d)+/);
-        chptr = matches[1];
-        return ["/chapter-:chptr", chptr, sec, exer];
+    if (!match) {
+        return [404, null, null, null];
+    }
+    
+    let [chptr, sec, exer] = [match[2], match[4], match[6]];
+
+    if (match) {
+        console.log("location matched with new regex");
+        console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
+        console.log("chapter:", chptr);
+        console.log("section:", sec);
+        console.log("exercise:", exer);
     }
 
+    let template = "";
 
-    if (/\/chapter-(\d)+\/section-(\d)+/.test(location)) {  // chapter-{chptr}/section-{sec}
-        matches = location.match(/\/chapter-(\d)+\/section-(\d)+/);
-        chptr = matches[1];
-        sec = matches[2];
-        return ["/chapter-:chptr/section-:sec", chptr, sec, exer];
+    if (sec === undefined && exer === undefined) {
+       template = "/chapter-:chptr";
+    } 
+    
+    else if (exer === undefined) {
+        template = "/chapter-:chptr/section-:sec";
     }
 
-
-    if (/\/chapter-(\d)+\/exercise-(\d)+/.test(location)) {  // chapter-{chptr}/solution-{sol}
-        matches = location.match(/\/chapter-(\d)+\/exercise-(\d)+/);
-        chptr = matches[1];
-        exer = matches[2];
-        return ["/chapter-:chptr/exercise-:exer", chptr, sec, exer];
+    else if (sec === undefined) {
+        template = "/chapter-:chptr/exercise-:exer";
     }
 
-
-    if (/\/chapter-(\d)+\/section-(\d)+\/exercise(\d)+/.test(location)) {
-        matches = location.match(/\/chapter-(\d)+\/section-(\d)+\/exercise-(\d)+/);
-        chptr = matches[1];
-        sec = matches[2];
-        exer = matches[3];
-        return ["/chapter-:chptr/section-:sec/exercise-:exer", chptr, sec, exer];
+    else {
+        template = "/chapter-:chptr/section-:sec/exercise-:exer";
     }
 
-    // console.log("404 Error");
-
-    return [404, chptr, sec, exer];
-
+    return [template, chptr, sec, exer];
 }
 
 
@@ -136,20 +130,26 @@ const locationHandler = async () => {
     }
 
     var params = matchRoute(location);
+    console.log("params", params);
     var route = routes[params[0]];
     var chptr = params[1];
     var sec = params[2];
     var exer = params[3];
 
+
     var template = route.template.replaceAll("{chptr}", chptr)
                                  .replaceAll("{sec}", sec)
                                  .replaceAll("{exer}", exer);
 
+    console.log("template: ", template);
+
     const response = await fetch(template);
+
+    console.log("response: ", response);
 
     if (!response.ok) {
         route = routes[404];
-        const errorPage = await fetch("404.html").then(response => response.text());
+        const errorPage = await fetch("/404.html").then(response => response.text());
         document.getElementById("solution-container").innerHTML = errorPage;
         document.title = route.title;
         document.querySelector('meta[name="description"]').setAttribute("content", route.description);
@@ -159,6 +159,7 @@ const locationHandler = async () => {
         const html = await response.text();
     
         document.getElementById("solution-container").innerHTML = html;
+        renderMathJax(document.getElementById("solution-container"));
         
         document.title = route.title.replaceAll("{chptr}", chptr)
                                      .replaceAll("{sec}", sec)
@@ -172,6 +173,18 @@ const locationHandler = async () => {
     }
 }
 
+
+function renderMathJax(container = document.body) {
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise([container])
+        .then(() => console.log("MathJax rendered"))
+        .catch(err => console.error("MathJax render error:", err));
+    } else {
+      // Try again later
+      console.log("MathJax not ready, retrying...");
+      setTimeout(() => renderMathJax(container), 100);
+    }
+  }
 
 document.addEventListener('click', (e) => {
     const { target } = e;

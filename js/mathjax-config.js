@@ -1,4 +1,5 @@
 // TODO comment this config file
+// TODO Figure out if using amscd is worth it or not... thinking about using svg's from quiver...
 // MathJax Config
 window.MathJax = {
     loader: {
@@ -24,6 +25,8 @@ window.MathJax = {
 // Load MathJax
   (function () {
     var script = document.createElement('script');
+    // TODO Figure out the difference between these two links
+    // script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
     script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js';
     script.async = true;
     document.head.appendChild(script);
