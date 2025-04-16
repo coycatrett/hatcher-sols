@@ -149,6 +149,21 @@ function renderMathJax(container = document.body) {
 
 
 /**
+ * Updates the contents of the solution container on the page, 
+ * and sets the document title and meta description accordingly.
+ * 
+ * @param {string} [html] - The new HTML content to be inserted into the solution container.
+ * @param {string} [title] - The new title for the document.
+ * @param {string} [description] - The new meta description content.
+ */
+function swapInnerHTML(html, title, description) {
+    document.getElementById("solution-container").innerHTML = html;
+    document.title = title;
+    document.querySelector('meta[name="description"]').setAttribute("content", description);
+}
+
+
+/**
  * Routes the current window.location.pathname to one of the routes in ``routes``
  * and fetches the html at that specific route
  * 
@@ -185,24 +200,16 @@ async function locationHandler() {
     // console.log("response: ", response);
 
     if (!response.ok) {
-        route = routes[404];
         const errorPage = await fetch("/404.html").then(response => response.text());
-        document.getElementById("solution-container").innerHTML = errorPage;
-        document.title = route.title;
-        document.querySelector('meta[name="description"]').setAttribute("content", route.description);
+        swapInnerHTML(errorPage, routes[404].title, routes[404].description);
         return;
     }
 
     const html = await response.text();
 
-    document.getElementById("solution-container").innerHTML = html;
+    swapInnerHTML(html, fillAndReplace(route.title, targets, values), fillAndReplace(route.description, targets, values));
+
     renderMathJax(document.getElementById("solution-container"));
-
-    document.title = fillAndReplace(route.title, targets, values);
-
-    let description = fillAndReplace(route.description, targets, values);
-
-    document.querySelector('meta[name="description"]').setAttribute("content", description);
 }
 
 
