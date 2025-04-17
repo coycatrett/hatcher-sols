@@ -13,13 +13,18 @@
 
         <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
 
-        <!-- CSS -->
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+        
+        <!-- Main CSS -->
         <link rel="stylesheet" href="/css/main.css">
 
         <!-- Scripts -->
          <!-- TODO Figure out the correct way to load JQuery and MathJax without CDN's, if it is even a problem -->
         <!-- Load JQuery --> 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" defer></script>
 
         <!-- Load MathJax config and MathJax -->
         <script src="/js/mathjax-config.js" defer></script>
@@ -32,7 +37,15 @@
     <body>
           <header>
             <!-- TODO add book logos -->
-            <h1>Hatcher - Algebraic Topology Solutions</h1>
+            <div class="kirby-container" id="kirby-container-left">
+                <img class="kirby-img" src="/public/images/Kirby_Learns_Algebraic_Topology.gif" alt="Kirby Kirby Learns Algebraic Topology gif">
+            </div>
+
+            <h1 id="page-title">Hatcher - Algebraic Topology Solutions</h1>
+
+            <div class="kirby-container" id="kirby-container-right">
+                <img class="kirby-img" src="/public/images/Kirby_Learns_Algebraic_Topology.gif" alt="Kirby Kirby Learns Algebraic Topology gif">
+            </div>
           </header>
          <!-- TODO Structure for chapter and section, leave each exercises to be dynamically loaded by js -->
           <nav id="nav-menu">

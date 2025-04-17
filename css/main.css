@@ -1,14 +1,75 @@
+:root {
+    --hatcherblue: #6290C0;
+    --hatcherred: #86335E;
+    --hatcherdarkblue: #0067A5;
+}
 
 body {
     margin: 0;
 }
 
 header {
-    border-style: solid;
-    border-color: black;
-    border-width: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    background-color: var(--hatcherblue);
+    background-color: white;
+
+    flex-shrink: 0;
+
+    border-style: double;
+    border-color: var(--hatcherblue);
+
+    border-width: 5px;
     padding: 1px 1px 1px 1px;
+    height: 74px;
 }
+
+
+#page-title {
+    /* TODO Figure out what the heck vw and rem mean... */
+    font-size: clamp(0.75rem, 4vw, 3rem);  /*min preferred max*/
+    font-family: 'Times New Roman', Times, serif;
+    color: var(--hatcherdarkblue);
+    -webkit-text-stroke: 1px black;
+    text-align: center;
+    margin: auto;
+}
+
+
+.kirby-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    max-width: 98px;
+}
+
+
+#kirby-container-left {
+    align-self: left;
+}
+
+#kirby-container-right {
+    align-self: right;
+}
+
+
+
+.kirby-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: auto;
+    max-height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
 
 #home-btn-container {
     display: flex;
@@ -44,4 +105,11 @@ header {
     object-fit: contain;
     max-width: 50px;
     max-width: 50px;
+}
+
+
+
+
+.mm-link:visited {
+    color: #6290C0;
 }
