@@ -9,6 +9,9 @@
         <title>Hatcher Solutions - Alg.Top.</title>
         <link rel="icon" type="image/x-icon" href="/public/favicon.ico">
 
+        <!-- CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
         <!-- Scripts -->
          <!-- TODO Figure out the correct way to load JQuery and MathJax without CDN's, if it is even a problem -->
         <!-- Load JQuery --> 
@@ -17,10 +20,10 @@
         <!-- Load MathJax config and MathJax -->
         <script src="/js/mathjax-config.js" defer></script>
 
-        <script type="module" src="/js/index.js" defer></script>
+        <script src="/js/index.js" defer></script>
         
         <!-- Script for loading solutions -->
-        <script type="module" src="/js/sols.js" async></script>
+        <script src="/js/sols.js" defer></script>
 
          <script src="/js/routes.js" defer></script>
     </head>
@@ -34,6 +37,11 @@
           </header>
          <!-- TODO Structure for chapter and section, leave each exercise for javascript -->
           <nav id="nav-menu">
+            <div id="home-btn-container">
+                <button id="home-btn" onclick="homePageContent()">
+                        <img id="home-btn-img" src="/public/images/house-with-two-rooms.png" alt="Home Button">
+                </button>
+            </div>
             <div class="mm-panels">
                 <ul class="mm-listview">
                     <li>
@@ -58,7 +66,7 @@
             </div>
           </nav>
 
-        <div id="solution-container"></div>
+        <div id="content"></div>
 
     </body>
 </html>

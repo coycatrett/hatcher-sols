@@ -157,7 +157,7 @@ function renderMathJax(container = document.body) {
  * @param {string} [description] - The new meta description content.
  */
 function swapInnerHTML(html, title, description) {
-    document.getElementById("solution-container").innerHTML = html;
+    document.getElementById("content").innerHTML = html;
     document.title = title;
     document.querySelector('meta[name="description"]').setAttribute("content", description);
 }
@@ -168,7 +168,6 @@ function swapInnerHTML(html, title, description) {
  * and fetches the html at that specific route
  * 
  * The inner html for the spa content is changed along with the title and description of the page
- * @returns
  */
 async function locationHandler() {
     let location = window.location.pathname;
@@ -209,7 +208,7 @@ async function locationHandler() {
 
     swapInnerHTML(html, fillAndReplace(route.title, targets, values), fillAndReplace(route.description, targets, values));
 
-    renderMathJax(document.getElementById("solution-container"));
+    renderMathJax(document.getElementById("content"));
 }
 
 
