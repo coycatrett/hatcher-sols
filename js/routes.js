@@ -1,13 +1,13 @@
 // TODO: Add support for the Additional Topics sections in each chapter
 const routes = {
     404: {
-        template: '/404.html',
+        template: '/pages/404.html',
         title: '404',
         description: 'Page not found!'
     },
 
     '/': {
-        template: '/home.html',
+        template: '/pages/home.html',
         title: 'Home',
         description: 'Hatcher Algebraic Topology Solutions Home Page'
     },
@@ -200,7 +200,7 @@ async function locationHandler() {
     // console.log("response: ", response);
 
     if (!response.ok) {
-        const errorPage = await fetch("/404.html").then(response => response.text());
+        const errorPage = await fetch(routes[404].template).then(response => response.text());
         swapInnerHTML(errorPage, routes[404].title, routes[404].description);
         return;
     }
