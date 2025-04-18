@@ -68,9 +68,6 @@ header {
 }
 
 
-
-
-
 #home-btn-container {
     display: flex;
     justify-content: left;
@@ -107,6 +104,38 @@ header {
     max-width: 50px;
 }
 
+.nav-menu {
+    position: fixed;
+    height: 100%;
+    width: 250px;
+    left: -250px;
+    background-color: white;
+    z-index: 1000;
+    transition: left 0.25s ease 0.2s;  /* closing transition */
+}
+
+
+.nav-menu.active {
+    left: 0px;
+    transition: left 0.5s ease 0.2s;  /* opening transition */ /* property name | duration | transition function | delay*/
+}
+
+
+#nav-menu-btn {
+    display: block; /* Make it a block-level element */
+    cursor: pointer; /* Indicate it's clickable */
+    /* Add padding, margins, and other styling as needed */
+    padding: 10px; /* Example padding */
+}
+
+.bar {
+    display: block; /* Make each line a block-level element */
+    width: 30px; /* Width of each line */
+    height: 3px; /* Height of each line */
+    background-color: #333; /* Color of the lines */
+    margin: 3px 0; /* Vertical spacing between lines */
+    transition: transform 0.4s ease; /* Smooth transition for animation */
+}
 
 
 

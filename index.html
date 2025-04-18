@@ -17,7 +17,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
         
         <!-- Main CSS -->
-        <link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/index.css">
 
         <!-- Scripts -->
          <!-- TODO Figure out the correct way to load JQuery and MathJax without CDN's, if it is even a problem -->
@@ -47,14 +47,21 @@
                 <img class="kirby-img" src="/public/images/Kirby_Learns_Algebraic_Topology.gif" alt="Kirby Kirby Learns Algebraic Topology gif">
             </div>
           </header>
-         <!-- TODO Structure for chapter and section, leave each exercises to be dynamically loaded by js -->
-          <nav id="nav-menu">
-            <div id="home-btn-container">
-                <a id="home-btn" href="/">
-                    <img id="home-btn-img" src="/public/images/house-with-two-rooms.png" alt="Home Button">
-                </a>
-            </div>
+        
+        <!-- TODO Structure for chapter and section, leave each exercises to be dynamically loaded by js -->
+        <div id="home-btn-container">
+            <a id="home-btn" href="/">
+                <img id="home-btn-img" src="/public/images/house-with-two-rooms.png" alt="Home Button">
+            </a>
+        </div>
 
+        <button id="nav-menu-btn" onclick="toggleNavMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        
+        <nav id="nav-menu" class="nav-menu">
             <div class="mm-panels">
                 <ul class="mm-listview">
                     <li>
@@ -77,9 +84,8 @@
                     </li>
                 </ul>
             </div>
-          </nav>
+        </nav>
 
         <div id="content"></div>
-
     </body>
 </html>
