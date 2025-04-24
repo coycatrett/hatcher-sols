@@ -106,7 +106,7 @@ header {
 
 .nav-menu {
     position: fixed;
-    height: 100%;
+    height: auto;
     width: 250px;
     left: -250px;
     background-color: white;
@@ -137,6 +137,10 @@ header {
     transition: transform 0.4s ease; /* Smooth transition for animation */
 }
 
+
+.mm-link {
+    text-decoration: none;
+}
 
 
 .mm-link:visited {
