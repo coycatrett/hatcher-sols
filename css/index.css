@@ -111,13 +111,13 @@ header {
     left: -250px;
     background-color: white;
     z-index: 1000;
-    transition: left 0.25s ease 0.2s;  /* closing transition */
+    transition: left 0.5s ease 0.2s;  /* closing transition */
+    /* opening transition */ /* property name | duration | transition function | delay*/
 }
 
 
 .nav-menu.active {
     left: 0px;
-    transition: left 0.5s ease 0.2s;  /* opening transition */ /* property name | duration | transition function | delay*/
 }
 
 
@@ -156,17 +156,16 @@ header {
     border-width: 2px;
     border-style: solid;
     border-color: black;
-    /* line-height:  */
+    /* line-height:  */ /* TODO:what does this do*/
 }
 
 
 .content-slideout {
     left: 0px;
-    transition: left 0.25s ease 0.2s;
+    transition: left 0.5s ease 0.2s;
 }
 
 
 .content-slideout.active {
     left: 250px;
-    transition: left 0.5s ease 0.2s;
 }
