@@ -146,3 +146,27 @@ header {
 .mm-link:visited {
     color: #6290C0;
 }
+
+#content {
+    position: relative;
+    padding: 5px 25px 5px 25px;
+    width: 1200px;
+    max-width: 90%;
+    margin: auto;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    /* line-height:  */
+}
+
+
+.content-slideout {
+    left: 0px;
+    transition: left 0.25s ease 0.2s;
+}
+
+
+.content-slideout.active {
+    left: 250px;
+    transition: left 0.5s ease 0.2s;
+}

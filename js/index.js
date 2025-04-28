@@ -1,10 +1,12 @@
 function toggleNavMenu() {
     document.getElementById("nav-menu").classList.toggle("active");
+    document.getElementById("content").classList.toggle("active");
 }
 
 
 function closeNavMenu() {
     document.getElementById("nav-menu").classList.remove("active");
+    document.getElementById("content").classList.remove("active");
 }
 
 
