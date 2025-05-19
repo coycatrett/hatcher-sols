@@ -234,7 +234,7 @@ function route(event) {
  *
  * @param {Event} e - The click event triggered by the user.
  */
-document.addEventListener('click', (e) => {
+document.addEventListener('click', async (e) => {
     const { target } = e;
     if (target.matches('a')) {
         e.preventDefault();
