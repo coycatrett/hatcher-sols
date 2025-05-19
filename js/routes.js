@@ -234,11 +234,18 @@ function route(event) {
  *
  * @param {Event} e - The click event triggered by the user.
  */
-document.addEventListener('click', async (e) => {
+document.addEventListener('click', (e) => {
     const { target } = e;
+    
     if (target.matches('a')) {
-        e.preventDefault();
-        route(e);
+        const href = target.getAttribute('href');
+        const linkURL = new URL(href, window.location.origin);
+        
+        // If the link is external, do the default behavior
+        if (linkURL.origin == window.location.origin) {
+            e.preventDefault();
+            route(e);
+        }
     }
 });
 
