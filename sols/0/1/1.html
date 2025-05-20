@@ -1,17 +1,61 @@
-<div class="problem-container">
-    <p class="problem-statement">
-        Construct an explicit deformation retraction of the torus with one point
-        deleted onto a graph consisting of two circles intersecting at a point, 
-        namely, longitude and meridian circles of torus.
-    </p>
+<div class="exercise-container">
+        <h1 class="exercise-title">Exercise 0.1</h1>
+        <p class="exercise-statement">
+            Construct an explicit deformation retraction of the torus with one point
+            deleted onto a graph consisting of two circles intersecting at a point, 
+            namely, longitude and meridian circles of the torus.
+        </p>
+    <!-- TODO: Style the hints. Make them revealable -->
+    <div class="hint-container">
+        <ul class="hint-list">
+          <li class="hint">
+            Choose a representation of the torus $\mathbb{T}$.
+            The most straightforward representation of the torus is the quotient of $[-1,1]^2$
+          </li>
+        </ul>
+    </div>
+
     <div class="solution-container">
         <p>
-            This solution depends on explicity constructing a deformation retraction of a punctured 
-            square to its boundary square, and then passing to the quotient.
+            Denote the torus by $\mathbb{T}$ defined as the quotient $[-1,1]^2 /\big((-1,t) \sim (1,t) \text{ and } (t,-1) \sim (t,1) \forall t \in [-1,1]\big)$
+            with quotient map $\rho : [-1,1]^2 \to \mathbb{T}$. With this representation, the longitude and meridian circles of the torus that we choose here
+            are the images of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$, in no particular order, under $\rho$.
+            These circles intersect once at the image of the corners of the square.
+        </p>
+
+        <p>
+            Recall that in any normed vector space (over the real or complex numbers), the closed unit ball is convex, and so there is a linear deformation retraction 
+            of the punctured closed unit ball to the unit sphere (if punctured in the interior).
+        </p>
+
+        <p>
+            Applying this with $\mathbb{R}^2$ equipped with the
+            <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)">$\infty$-norm</a>
+            - where, crucially, $\mathbb{D}^{2} = \mathbb{D}_{\infty}^{2} = [-1,1]^2$ - there is a linear deformation retraction given by
+            $$
+            \begin{align*}
+                H :\,& (\mathbb{D}^{2} - 0) \times I \to \mathbb{D}^{2} - 0 \\[10pt]
+                        & (x,t) \mapsto (1-t)x + t\frac{x}{\,\,\lVert x \rVert_{\infty}} \\[10pt]
+            \end{align*}
+            $$
+            of $\mathbb{D}^{2} - 0$ onto $\mathbb{S}_{\infty}^{1} = \partial \mathbb{D}^2 = (\{0,1\} \times [-1,1]) \cup ([-1,1] \times \{0,1\})$.
         </p>
         <p>
-            Recall that the closed unit disk in the plane with the <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)">$\infty$-norm</a> is a square.
-            Put $\mathbb{D}_{\infty}$
+            Let $\iota : \mathbb{D}^{2} - 0 \to \mathbb{D}^{2}$ be the inclusion map and $p_0 = \rho(0)$.
+            Observe that $(\rho \circ \iota) \circ H$ is constant on the fibers of the quotient map $(\rho \circ \iota) \times \text{id}_{I} : (\mathbb{D}^2 - 0) \times I \to (\mathbb{T} - p_0) \times I$,
+            and so $(\rho \circ \iota) \circ H$ descends to the quotient to a deformation retraction $\widetilde{H} : (\mathbb{T} - p_0) \times I \to \mathbb{T} - p_0$ of $\mathbb{T} - p_0$ onto the longitude and meridan circles of $\mathbb{T}$.
+        </p>
+        <p>
+            The above can be summarized be the following commutative diagram:
+        </p>
+        <!-- https://q.uiver.app/#q=WzAsNCxbMCwwLCIoXFxtYXRoYmJ7RH1eMiAtIDApIFxcdGltZXMgSSAiXSxbMSwwLCJcXG1hdGhiYntEfV4yIC0gMCJdLFswLDEsIihcXG1hdGhiYntUfSAtIHBfMCkgXFx0aW1lcyBJIl0sWzEsMSwiXFxtYXRoYmJ7VH0gLSBwXzAiXSxbMCwxLCJIIl0sWzAsMiwiKFxccmhvIFxcY2lyYyBcXGlvdGEpIFxcdGltZXMgXFx0ZXh0e2lkfV97SX0iLDJdLFsyLDMsIlxcd2lkZXRpbGRle0h9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMywiXFxyaG8gXFxjaXJjIFxcaW90YSJdXQ== -->
+        <iframe class="quiver-embed" src="https://q.uiver.app/#q=WzAsNCxbMCwwLCIoXFxtYXRoYmJ7RH1eMiAtIDApIFxcdGltZXMgSSAiXSxbMSwwLCJcXG1hdGhiYntEfV4yIC0gMCJdLFswLDEsIihcXG1hdGhiYntUfSAtIHBfMCkgXFx0aW1lcyBJIl0sWzEsMSwiXFxtYXRoYmJ7VH0gLSBwXzAiXSxbMCwxLCJIIl0sWzAsMiwiKFxccmhvIFxcY2lyYyBcXGlvdGEpIFxcdGltZXMgXFx0ZXh0e2lkfV97SX0iLDJdLFsyLDMsIlxcd2lkZXRpbGRle0h9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMywiXFxyaG8gXFxjaXJjIFxcaW90YSJdXQ==&embed" width="434" height="304" style="border-radius: 8px; border: none;"></iframe>
+        <p>
+            One can then compute that $\widetilde{H}$ has explicit formula
+            $$\widetilde{H}(\rho \circ \iota(x), t) = \rho \circ \iota \left((1-t)x + t\frac{x}{\,\,\lVert x \rVert_{\infty}}\right).$$
+
+            Obtaining formulae for various representations of $\mathbb{T}$ from this one is easier now,
+            as we need only pass through a homeomorphism.
         </p>
     </div>
 </div>

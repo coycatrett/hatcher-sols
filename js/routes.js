@@ -239,9 +239,12 @@ document.addEventListener('click', (e) => {
     
     if (target.matches('a')) {
         const href = target.getAttribute('href');
+
+        // URL(url, base) constructs a structured URL link from a string url and a base string
+        // In this case, window.location.origin is something line https://mywebsite.com
         const linkURL = new URL(href, window.location.origin);
         
-        // If the link is external, do the default behavior
+        // If the link is internal, go to custom routing
         if (linkURL.origin == window.location.origin) {
             e.preventDefault();
             route(e);

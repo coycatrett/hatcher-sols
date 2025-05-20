@@ -6,6 +6,7 @@
 
 body {
     margin: 0;
+    overflow-y: scroll;
 }
 
 header {
@@ -153,9 +154,6 @@ header {
     width: 1200px;
     max-width: 90%;
     margin: auto;
-    border-width: 2px;
-    border-style: solid;
-    border-color: black;
     /* line-height:  */ /* TODO:what does this do*/
 }
 
