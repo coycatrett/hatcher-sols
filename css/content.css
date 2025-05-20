@@ -1,7 +1,7 @@
 :root {
     --hatcherblue: #6290C0;
-    --hatcherred: #86335E;
-    --hatcherdarkblue: #0067A5;
+    --babyblue: #89CFF0;
+    --fadedbabyblue: #89CFF040;
 }
 
 p {
@@ -29,11 +29,11 @@ p {
 
     border-style: solid;
     border-width: 0px 0px 0px 5px;  /* top right bottom left */
-    border-color: #89CFF0;
+    border-color: var(--babyblue);
 
     margin: 0px 0px 0px 0px;
 
-    background-color: #89CFF040;
+    background-color: var(--fadedbabyblue);
 }
 
 .solution-container {
