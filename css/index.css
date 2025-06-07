@@ -4,9 +4,11 @@
     --hatcherdarkblue: #0067A5;
 }
 
+
 html {
     background-color: #f5f5f5;
 }
+
 
 body {
     margin: 0;
@@ -15,9 +17,11 @@ body {
     padding-bottom: 5em;
 }
 
+
 body.inactive {
     overflow-y: hidden;
 }
+
 
 header {
     display: flex;
@@ -28,10 +32,11 @@ header {
 
     border-style: double;
     border-color: var(--hatcherblue);
-
     border-width: 5px;
+
     padding: 1px 1px 1px 1px;
     height: 74px;
+    margin-bottom: 0.25em;
 }
 
 
@@ -43,7 +48,7 @@ header {
     -webkit-text-stroke: 1px black;
     text-align: center;
     margin: auto;
-}
+}    
 
 
 .kirby-container {
@@ -85,6 +90,7 @@ header {
     column-gap: 0.25em;
 }
 
+
 #home-btn-container {
     display: flex;
     justify-content: left;
@@ -100,13 +106,14 @@ header {
     border-style: outset;
     padding: 1px;
     border-width: 2px;
-    border-radius: 5px;  /*Rounded corners*/
+    border-radius: 5px;
 }
 
 
 #home-btn:active {
     border-color: black;
 }
+
 
 #home-btn:visited {
     border-color: black;
@@ -120,6 +127,7 @@ header {
     max-width: 50px;
     max-width: 50px;
 }
+
 
 .nav-menu {
     position: fixed;
@@ -138,19 +146,22 @@ header {
 
 
 #nav-menu-btn {
-    display: block; /* Make it a block-level element */
-    cursor: pointer; /* Indicate it's clickable */
-    /* Add padding, margins, and other styling as needed */
-    padding: 10px; /* Example padding */
-}
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+    background-color: whitesmoke;
+    border: none;
+}    
+
 
 .bar {
-    display: block; /* Make each line a block-level element */
-    width: 30px; /* Width of each line */
-    height: 3px; /* Height of each line */
-    background-color: #333; /* Color of the lines */
-    margin: 3px 0; /* Vertical spacing between lines */
-    transition: transform 0.4s ease; /* Smooth transition for animation */
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: #333; /* color of the lines */
+    margin: 3px 0; /* vertical spacing between lines */
 }
 
 
@@ -162,15 +173,18 @@ header {
     padding-left: 0.5em;
 }
 
+
 .mm-listview li {
     transition: all 0.2 ease-in-out;
     border-radius: 5px;
 }
 
+
 .mm-listview li:hover{
     color: #6290C000;
     box-shadow: 0 5px 5px lightgray;
 }
+
 
 .mm-link {
     display: flex;
@@ -188,6 +202,7 @@ header {
 .mm-link-chptr {
     font-weight: bold;
 }
+
 
 #content {
     position: relative;
