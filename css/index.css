@@ -78,7 +78,7 @@ header {
 
 
 #btn-container {
-    margin-left: 0.05em;
+    margin-left: 0.15em;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -124,8 +124,8 @@ header {
 .nav-menu {
     position: fixed;
     height: auto;
-    width: 250px;
-    left: -250px;
+    width: 275px;
+    left: -275px;
     z-index: 1000;
     transition: left 0.5s ease 0.2s;  /* closing transition */
     /* opening transition */ /* property name | duration | transition function | delay*/
@@ -154,13 +154,39 @@ header {
 }
 
 
+.mm-listview {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+    list-style-type: none;
+    padding-left: 0.5em;
+}
+
+.mm-listview li {
+    transition: all 0.2 ease-in-out;
+    border-radius: 5px;
+}
+
+.mm-listview li:hover{
+    color: #6290C000;
+    box-shadow: 0 5px 5px lightgray;
+}
+
 .mm-link {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0.25em;
     text-decoration: none;
 }
 
 
 .mm-link:visited {
-    color: #6290C0;
+    color: var(--hatcherblue);
+}
+
+
+.mm-link-chptr {
+    font-weight: bold;
 }
 
 #content {
