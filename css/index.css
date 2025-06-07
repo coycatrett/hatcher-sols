@@ -60,10 +60,10 @@ header {
     align-self: left;
 }
 
+
 #kirby-container-right {
     align-self: right;
 }
-
 
 
 .kirby-img {
@@ -76,6 +76,14 @@ header {
     padding: 0;
 }
 
+
+#btn-container {
+    margin-left: 0.05em;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    column-gap: 0.25em;
+}
 
 #home-btn-container {
     display: flex;
