@@ -1,7 +1,7 @@
 <div class="exercise-container">
     <h1 class="exercise-title">Exercise 0.2</h1>
     <p class="exercise-statement">
-        Construct an explicit deformation retraction of $\mathbb{R}^n - 0$ onto $S^{n - 1}$ for $n > 1$.
+        Construct an explicit deformation retraction of $\mathbb{R}^n - 0$ onto $\mathbb{S}^{n - 1}$.
     </p>
 
     <div class="hint-container">
@@ -17,42 +17,52 @@
         <summary summary-open="Solution" summary-closed="Solution"></summary>
         <div class="solution-container">
             <p>
-                Consider the radial projection from the origin $r : \mathbb{R}^n - 0 \to S^{n - 1}$ defined by
-                $r(x) = \frac{x}{\lVert x \rVert}$
-                where $\lVert \, \cdot \,\rVert$ is the $2$-norm on $\mathbb{R}^n$.
-                Note that $r$ is well-defined since $\lVert x \rVert$ is never zero on $\mathbb{R}^n - 0$.
-                One can see $r$ is continuous by expressing it as a composition of continuous maps.
+                Given $x \in \mathbb{R}^n - 0$, put $r(x)$ to be the point on the unit sphere $\mathbb{S}^{n - 1}$ where the ray based at the origin in the direciton of $x$ intersects $\mathbb{S}^{n - 1}$,
+                as indicated below.
             </p>
-            <p>
-                Given $x \in \mathbb{R}^n - 0$, $r(x)$ is the point on the unit sphere $S^{n - 1}$ where the ray based at the origin in the direciton of $x$ intersects $S^{n - 1}$.
-            </p>
+
             <div class="img-container">
                 <img src="/public/images/0/2/radial-projection-from-origin.png" style="max-height: 450px;">
             </div>
+
             <p>
-                We define a homotopy $H : (\mathbb{R}^n - 0) \times I \to \mathbb{R}^{n} - 0$ from the identity on $\mathbb{R}^n - 0$ to $\iota r$ (where $\iota$ is the inclusion $S^{ n - 1} \hookrightarrow \mathbb{R}^n - 0$) by following this ray towards the 
-                point of intersection with $S^{n - 1}$ and show that it is a deformation retraction.
+                The map $r : \mathbb{R}^n - 0 \to \mathbb{S}^{n - 1}$ above is the radial projection from the origin onto $\mathbb{S}^{n - 1}$ and has explicit formula given by
+                $r(x) = \frac{x}{\lVert x \rVert}$
+                where $\lVert \, \cdot \,\rVert$ is the $2$-norm on $\mathbb{R}^n$.
+                Note that $r$ is well-defined since $\lVert x \rVert$ is never zero on $\mathbb{R}^n - 0$.
+                One can see that $r$ is continuous since it is the composition of continuous maps.
             </p>
+
+            <p>
+                We define a homotopy $H : (\mathbb{R}^n - 0) \times I \to \mathbb{R}^{n} - 0$ from the identity on $\mathbb{R}^n - 0$ to $\iota r$ (where $\iota$ is the inclusion $\mathbb{S}^{ n - 1} \hookrightarrow \mathbb{R}^n - 0$) by following this ray towards its
+                point of intersection with $\mathbb{S}^{n - 1}$ and show that it is a deformation retraction.
+            </p>
+
             <p>
                 Define $H$ by
                 $$H(-,t) = (1 - t)\text{id}_{\mathbb{R}^n - 0} + t\,\iota r.$$
                 It is simple to check that $H$ is non-zero, and so is well-defined. $H$ can be written as a composition of multiplication and addition maps, along with the relavent maps above, and so is continuous.
             </p>
+
             <p>
                 One can now verify that 
             </p>
+
             <ul style="margin: 0; padding-top: 0;">
                 <li>
-                    $H(-,0) = \text{id}_{\mathbb{R}^n - 0}$
+                    $H(x,0) = x$ for all $x \in \mathbb{R}^{n} - 0$
                 </li>
                 <li>
-                    $H(-,1) = \iota r$
+                    $H(x,1) = \iota r(x) \in \mathbb{S}^{n - 1}$ for all $x \in \mathbb{R}^{n} - 0$
                 </li>
                 <li>
-                    $H\circ (\iota \times \text{id}_I) = \iota \rho$ where $\rho : S^{n - 1} \times I \to S^{n - 1}$ is the coordinate projection onto $S^{n - 1}$
+                    $H(x,t) = x$ for all $(x,t) \in \mathbb{S}^{n - 1} \times I$
                 </li>
             </ul>
-            <p>and so $H$ is indeed a deformation retraction.</p>
+
+            <p>
+                and so $H$ is indeed a deformation retraction.
+            </p>
         </div>
     </details>
 </div>
