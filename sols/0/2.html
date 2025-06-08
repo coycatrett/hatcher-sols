@@ -8,7 +8,7 @@
         <details class="hint-details">
             <summary summary-open="Close Hint" summary-closed="Hint"></summary>
             <p>
-                Consider the case $n = 2$ first. Each point $x \in \mathbb{R}^2 - 0$ defines a ray based at the origin in the direction of $x$ that passes through the unit circle.
+                Consider the case $n = 2$. Each point $x \in \mathbb{R}^2 - 0$ defines a ray based at the origin in the direction of $x$ that passes through the unit circle. Draw this picture.
             </p>
         </details>
     </div>
@@ -17,7 +17,7 @@
         <summary summary-open="Solution" summary-closed="Solution"></summary>
         <div class="solution-container">
             <p>
-                Consider the map $r : \mathbb{R}^n - 0 \to S^{n - 1}$ defined by
+                Consider the radial projection from the origin $r : \mathbb{R}^n - 0 \to S^{n - 1}$ defined by
                 $r(x) = \frac{x}{\lVert x \rVert}$
                 where $\lVert \, \cdot \,\rVert$ is the $2$-norm on $\mathbb{R}^n$.
                 Note that $r$ is well-defined since $\lVert x \rVert$ is never zero on $\mathbb{R}^n - 0$.
@@ -26,8 +26,8 @@
             <p>
                 Given $x \in \mathbb{R}^n - 0$, $r(x)$ is the point on the unit sphere $S^{n - 1}$ where the ray based at the origin in the direciton of $x$ intersects $S^{n - 1}$.
             </p>
-            <div style="align-self: center;">
-                <img src="/public/images/0/2/radial-projection-from-origin.png" style="max-height: 450px; border-radius: 5px;">
+            <div class="img-container">
+                <img src="/public/images/0/2/radial-projection-from-origin.png" style="max-height: 450px;">
             </div>
             <p>
                 We define a homotopy $H : (\mathbb{R}^n - 0) \times I \to \mathbb{R}^{n} - 0$ from the identity on $\mathbb{R}^n - 0$ to $\iota r$ (where $\iota$ is the inclusion $S^{ n - 1} \hookrightarrow \mathbb{R}^n - 0$) by following this ray towards the 
