@@ -25,16 +25,19 @@ p {
 .exercise-statement {
     font-size: larger;
 
-    padding: 2px 5px 4px 10px;  /* top right bottom left */
+    padding: 2px 5px 4px 10px;
+    /* top right bottom left */
 
     border-style: solid;
-    border-width: 0px 0px 0px 5px;  /* top right bottom left */
+    border-width: 0px 0px 0px 5px;
+    /* top right bottom left */
     border-color: var(--babyblue);
 
     margin: 0px 0px 0px 0px;
 
     background-color: var(--fadedbabyblue);
 }
+
 
 .solution-container {
     display: flex;
@@ -52,14 +55,17 @@ p {
     background-color: #80808010;
 }
 
+
 .quiver-embed {
     align-self: center;
 }
+
 
 .hint-container {
     display: flex;
     flex-direction: column;
 }
+
 
 details.hint-details {
     margin-top: 5px;
@@ -68,6 +74,7 @@ details.hint-details {
     border-radius: 5px;
     padding: 0.5em 0.5em 0;
 }
+
 
 details.hint-details summary {
     list-style-type: '? ';
@@ -78,16 +85,20 @@ details.hint-details summary {
     padding: 0.5em;
 }
 
+
 details.hint-details summary::after {
     content: attr(summary-closed);
     color: var(--hatcherblue);
 }
 
+
 details.hint-details[open] summary {
-    list-style-type: '\BF\20'; /* unicode for '¿ ' */
+    list-style-type: '\BF\20';
+    /* unicode for '¿ ' */
     border-bottom: 1px solid var(--babyblue);
     margin-bottom: 0.5em;
 }
+
 
 details.hint-details[open] summary::after {
     content: attr(summary-open);
@@ -99,6 +110,7 @@ details.solution-details {
     padding: 5px;
 }
 
+
 details.solution-details summary {
     font-size: large;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -106,21 +118,26 @@ details.solution-details summary {
 
 }
 
+
 details.solution-details summary::after {
     content: attr(summary-closed);
 }
+
 
 details.solution-details[open] summary {
     list-style-type: '- ';
 }
 
+
 details.solution-details[open] summary::after {
     content: attr(summary-open);
 }
 
+
 .img-container {
     align-self: center;
 }
+
 
 .img-container img {
     border-radius: 8px;
