@@ -25,7 +25,7 @@ const routes = {
     },
 
     '/chapter-chptr/exercise-exer': {
-        template: '/sols/chptr/exer/exer.html',
+        template: '/sols/chptr/exer.html',
         title: 'Chapter chptr Section exer',
         description: 'Chapter chptr Exercise exer'
     },
