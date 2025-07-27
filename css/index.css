@@ -165,7 +165,7 @@ header {
     height: 3px;
     background-color: #333;
     /* color of the lines */
-    margin: 3px 0;
+    margin: 4px 0;
     /* vertical spacing between lines */
 }
 
@@ -204,7 +204,7 @@ header {
 }
 
 
-.mm-link-chptr {
+.mm-link-text {
     font-weight: bold;
 }
 

@@ -1,3 +1,6 @@
+// Debug flag
+const DEBUG = false;
+
 // TODO: Add support for the Additional Topics sections in each chapter
 const routes = {
     404: {
@@ -22,8 +25,8 @@ const routes = {
         template: '/sols/chptr/sec/sec.html',
         title: 'Chapter chptr Section sec',
         description: 'Chapter chptr Section sec Exercises'
+        
     },
-
     '/chapter-chptr/exercise-exer': {
         template: '/sols/chptr/exer.html',
         title: 'Chapter chptr Section exer',
@@ -73,15 +76,14 @@ const routes = {
  * @param {String} [location] - window location pathname
  */
 function matchRoute(location) {
-    if (location.length == 0 || location == "/") {
-        return '/';
-    }
+    if (location.length == 0 || location == "/") return '/';
 
     const chptrPattern = /(\/chapter-([0-4]{1}))/;
     const secPattern = /(\/section-(\d+))?/;
     const exerPattern = /(\/exercise-(\d+))?/;
 
-    const match = location.match(chptrPattern.source + secPattern.source + exerPattern.source + /$/.source);  // $ to search until end of string
+    // $ to search until end of string
+    const match = location.match(chptrPattern.source + secPattern.source + exerPattern.source + /$/.source);
     
     if (!match) {
         return [404, null, null, null];
@@ -89,22 +91,21 @@ function matchRoute(location) {
     
     let [chptr, sec, exer] = [match[2], match[4], match[6]];
 
-    // if (match) {
-    //     console.log("location matched with new regex");
-    //     console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
-    //     console.log("chapter:", chptr);
-    //     console.log("section:", sec);
-    //     console.log("exercise:", exer);
-    // }
+    if (DEBUG) {
+        if (match) {
+            console.log("location matched with new regex");
+            console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
+            console.log("chapter: ", chptr);
+            console.log("section: ", sec);
+            console.log("exercise: ", exer);
+        }
+    }
 
     let template = "";
 
     if (sec === undefined && exer === undefined) template = "/chapter-chptr";
-    
     else if (exer === undefined) template = "/chapter-chptr/section-sec";
-
     else if (sec === undefined) template = "/chapter-chptr/exercise-exer";
-
     else template = "/chapter-chptr/section-sec/exercise-exer";
 
     return [template, chptr, sec, exer];
@@ -142,8 +143,8 @@ function renderMathJax(container = document.body) {
         .catch(err => console.error("MathJax render error:", err));
     }
     else {
-    //   console.log("MathJax not ready, retrying...");
-      setTimeout(() => renderMathJax(container), 100);
+        //console.log("MathJax not ready, retrying...");
+        setTimeout(() => renderMathJax(container), 100);
     }
 }
 
@@ -171,32 +172,26 @@ function swapInnerHTML(html, title, description) {
  */
 async function locationHandler() {
     let location = window.location.pathname;
+    if (DEBUG) console.log('location: ', location);
 
-    // console.log('location: ', location);
+    if (location.length == 0) location = '/';
 
-    if (location.length == 0) {
-        location = '/';
-    }
+    const params = matchRoute(location);
+    if (DEBUG) console.log("params", params);
 
-    let params = matchRoute(location);
-    let route = routes[params[0]];
-    let chptr = params[1];
-    let sec = params[2];
-    let exer = params[3];
+    const route  = routes[params[0]];
+    const chptr  = params[1];
+    const sec    = params[2];
+    const exer   = params[3];
 
-    const values = { chptr, sec, exer };
     const targets = /chptr|sec|exer/g;
+    const values  = { chptr, sec, exer };
     
-    // console.log("params", params);
-
-
-    let template = fillAndReplace(route.template, targets, values);
-
-    // console.log("template: ", template);
+    const template = fillAndReplace(route.template, targets, values);
+    if (DEBUG) console.log("template: ", template);
 
     const response = await fetch(template);
-
-    // console.log("response: ", response);
+    if (DEBUG) console.log("response: ", response);
 
     if (!response.ok) {
         const errorPage = await fetch(routes[404].template).then(response => response.text());
@@ -205,9 +200,7 @@ async function locationHandler() {
     }
 
     const html = await response.text();
-
     swapInnerHTML(html, fillAndReplace(route.title, targets, values), fillAndReplace(route.description, targets, values));
-
     renderMathJax(document.getElementById("content"));
 }
 
@@ -218,10 +211,10 @@ async function locationHandler() {
  * updating the URL using the History API, and calling the route handler.
  *
  * @param {MouseEvent} [event] - The click event triggered by a navigation link.
- *                                If not provided, falls back to `window.event`.
+ *                               If not provided, falls back to `window.event`.
  */
 function route(event) {
-    // event = event || window.event;
+    event = event || window.event;
     event.preventDefault();
     window.history.pushState({}, '', event.target.href);
     locationHandler();
