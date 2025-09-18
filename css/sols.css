@@ -60,8 +60,11 @@ p {
     align-self: center;
 }
 
-
 .hint-container {
+    display: none;
+}
+
+.hint-container.active {
     display: flex;
     flex-direction: column;
 }
