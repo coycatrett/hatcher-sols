@@ -13,26 +13,16 @@ function closeNavMenu() {
 
 
 // Prevent clicks on the menu itself from closing it
-document.getElementById("nav-menu").addEventListener("click", (e) => {
-    e.stopPropagation();
-});
+document.getElementById("nav-menu").addEventListener("click", e => e.stopPropagation());
 
 
 // Prevent clicks on the toggle button from bubbling up
-document.getElementById("nav-menu-btn").addEventListener("click", (e) => {
-    e.stopPropagation();
-});
+document.getElementById("nav-menu-btn").addEventListener("click", e => e.stopPropagation());
 
 
 // Clicking anywhere else closes the menu
-document.addEventListener("click", () => {
-    closeNavMenu();
-});
+document.addEventListener("click", () => closeNavMenu());
 
 
 // Close nav menu when Escape key is pressed
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-        closeNavMenu();
-    }
-});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeNavMenu() });

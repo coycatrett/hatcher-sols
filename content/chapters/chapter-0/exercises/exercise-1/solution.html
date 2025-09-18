@@ -1,0 +1,154 @@
+<!-- TODO: Rewrite this in similar style to 0.2 -->
+<!-- <div class="exercise-container"> -->
+<!-- <h1 class="exercise-title">Exercise 0.1</h1> -->
+
+<!-- <div class="hint-container">
+        <details class="hint-details">
+            <summary summary-open="Close Hint" summary-closed="Hint"></summary>
+            <p>
+                Start of with the torus as a quotient of $[-1,1]^{2}$ with opposite edges
+                identified (pg. 5).
+                Find the longitude and meridan circles in this representation and select well-chosen
+                longitude and meridian circles to retract to after removing $0 = (0,0) \in [-1,1]^{2}$.
+            </p>
+        </details>
+
+        <details class="hint-details">
+            <summary summary-open="Close Hint" summary-closed="Hint"></summary>
+            <p>
+                Define a homotopy $H : ([-1,1]^2 - 0) \times I \to [-1,1]^2 - 0$ such that after composing with the
+                quotient projection onto the punctured torus, the composition descends to a homotopy on the punctured
+                torus. Draw this diagram.
+            </p>
+        </details>
+    </div> -->
+
+<!-- <details class="solution-details">
+    <summary summary-open="Solution" summary-closed="Solution"></summary> -->
+<!-- <div class="solution-container"> -->
+<p>
+    Denote the torus by $\mathbb{T}$, defined as the quotient $[-1,1]^{2} /\big((-1,t) \sim (1,t) \text{ and
+    } (t,-1) \sim (t,1) \forall t \in [-1,1]\big)$
+    with quotient map $\rho : [-1,1]^{2} \to \mathbb{T}$. With this representation, the longitude and
+    meridian circles of the torus that we choose here
+    are the images of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$, in no particular order, under
+    $\rho$.
+    These circles intersect once at the image of the corners of $[-1,1]^{2}$ and correspond to the opposite
+    pairs of edges in $\partial [-1,1]^{2}$.
+</p>
+
+<p>
+    Given $x \in [-1,1]^{2}- 0$, put $r(x)$ to be the point on $\partial [-1,1]^{2}$ where the ray based at
+    the origin in the direction of $x$ intersects $\partial [-1,1]^{2}$.
+</p>
+
+<div class="img-container">
+    <img src="/public/images/0/1/radial-projection-from-origin-infinity-norm.png">
+</div>
+
+<p>
+    The map $r : [-1,1]^{2} - 0 \to \partial [-1,1]^{2}$ above is the radial projection from the origin onto
+    $\partial [-1,1]^{2}$ and has explicit formula given by
+    $r(x) = \frac{x}{\,\,\lVert x \rVert_{\infty}}$, where $\lVert \, \cdot \, \rVert_{\infty}$ is the <a
+        href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)">$\infty$-norm</a>.
+</p>
+
+<p>
+    The significance of the $\infty$-norm above is that $\mathbb{D}^{2}_{\infty} = [-1,1]^{2}$ and
+    $\mathbb{S}^{1}_{\infty} = \partial[-1,1]^{2}$,
+    so this is simply an instance of the radial projection from the origin to the unit circle in a normed
+    vector space.
+</p>
+
+<p>
+    For the reasons above, we will refer to $[-1,1]^{2}$ as $\mathbb{D}^{2}$ and $\partial [-1,1]^{2}$ as
+    $\mathbb{S}^{1}$ for the remainder of the solution.
+</p>
+
+<p>
+    We define a homotopy $H : (\mathbb{D}^{2} - 0) \times I \to \mathbb{D}^{2} - 0$ from the
+    identity on $\mathbb{D}^{2} - 0$ to $\iota r$ (where $\iota$ is the inclusion $\mathbb{S}^{1}
+    \hookrightarrow \mathbb{D}^{2} - 0$) by having each point follow the ray it determines to its point of
+    intersection with $\mathbb{S}^{1}$ and show that it is a deformation retraction onto $\mathbb{S}^{1}$.
+    Then we show that $H$ descends to a deformation retraction
+    $\widetilde{H} : (\mathbb{T} - 0) \times I \to \mathbb{T} - 0$ onto the longitude and meridian circles
+    of
+    $\mathbb{T}$ that we have chosen, i.e., the image of $\mathbb{S}^{1}$ under $\rho$.
+</p>
+
+<p>
+    To that end, define $H$ by
+    $$H(-,t) = (1 - t)\text{id}_{\mathbb{D}^{2} - 0} + t\,\iota r.$$
+    Since $H(x,-)$ parametrizes the line segment from $x$ to $r(x)$ for each $x$ (and is therefore never
+    $0$), $H$ is well-defined. $H$ may be written as a composition of continuous functions, and is therefore
+    continuous.
+<p>
+    One can now verify that
+</p>
+
+<ul style="margin: 0; padding-top: 0;">
+    <li>
+        $H(x,0) = x$ for all $x \in \mathbb{D}^{2} - 0$
+    </li>
+    <li>
+        $H(x,1) = \iota r(x) \in \mathbb{S}^{1}$ for all $x \in \mathbb{D}^{2} - 0$
+    </li>
+    <li>
+        $H(x,t) = x$ for all $(x,t) \in \mathbb{S}^{1} \times I$
+    </li>
+</ul>
+
+<p>
+    and so $H$ is a deformation retraction onto $\mathbb{S}^{1}$.
+</p>
+
+<p>
+    Let $p_{0} = \rho(0)$ and $\rho_{0} : \mathbb{D}^{2} - 0 \to \mathbb{T} - p_{0}$ be the restriction of
+    $\rho$ to $\mathbb{D}^{2} - 0$.
+    Notice that $\rho_{0} \circ H$ is constant on the fibers of the quotient map $\rho_{0} \times
+    \text{id}_{I} : (\mathbb{D}^{2} - 0) \times I \to (\mathbb{T} - p_{0}) \times I$,
+    and so $\rho_{0} \circ H$ descends to the quotient to a homotopy $\widetilde{H} : (\mathbb{T} - p_{0})
+    \times I \to \mathbb{T} - p_{0}$.
+</p>
+
+<p>
+    The above can be summarized be the following commutative diagram:
+</p>
+
+<!-- https://q.uiver.app/#q=WzAsNCxbMCwwLCIoXFxtYXRoYmJ7RH1eMiAtIDApIFxcdGltZXMgSSAiXSxbMSwwLCJcXG1hdGhiYntEfV4yIC0gMCJdLFswLDEsIihcXG1hdGhiYntUfSAtIHBfMCkgXFx0aW1lcyBJIl0sWzEsMSwiXFxtYXRoYmJ7VH0gLSBwXzAiXSxbMCwxLCJIIl0sWzAsMiwiXFxyaG9fezB9IFxcdGltZXMgXFx0ZXh0e2lkfV97SX0iLDJdLFsyLDMsIlxcd2lkZXRpbGRle0h9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMywiXFxyaG9fMCJdXQ== -->
+<iframe class="quiver-embed"
+    src="https://q.uiver.app/#q=WzAsNCxbMCwwLCIoXFxtYXRoYmJ7RH1eMiAtIDApIFxcdGltZXMgSSAiXSxbMSwwLCJcXG1hdGhiYntEfV4yIC0gMCJdLFswLDEsIihcXG1hdGhiYntUfSAtIHBfMCkgXFx0aW1lcyBJIl0sWzEsMSwiXFxtYXRoYmJ7VH0gLSBwXzAiXSxbMCwxLCJIIl0sWzAsMiwiXFxyaG9fezB9IFxcdGltZXMgXFx0ZXh0e2lkfV97SX0iLDJdLFsyLDMsIlxcd2lkZXRpbGRle0h9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMywiXFxyaG9fMCJdXQ==&embed"
+    width="434" height="304" style="border-radius: 8px; border: none;"></iframe>
+
+<p>
+    Similar to before, one verifies that
+</p>
+
+<ul style="margin: 0; padding-top: 0;">
+    <li>
+        $\widetilde{H}(\rho_{0}(x),0) = \rho_{0}(x)$ for all $x \in \mathbb{D}^{2} - 0$
+    </li>
+    <li>
+        $\widetilde{H}(\rho_{0}(x),1) = \rho_{0}(\iota r(x)) \in \rho_{0}(\mathbb{S}^{1})$ for all $x \in
+        \mathbb{D}^{2} - 0$
+    </li>
+    <li>
+        $\widetilde{H}(\rho_{0}(x),t) = \rho_{0}(x)$ for all $(x,t) \in \mathbb{S}^{1} \times I$
+    </li>
+</ul>
+<p>
+    and so $\widetilde{H}$ is a deformation retraction onto $\rho_{0}(\mathbb{S}^{1})$, i.e., the union of
+    the longitude and meridian circles in $\mathbb{T}$.
+</p>
+
+<p>
+    One can then compute that $\widetilde{H}$ has explicit formula
+    $$\widetilde{H}(\rho_{0}(x), t) = \rho_{0} \left((1-t)x + t\frac{x}{\,\,\lVert x
+    \rVert_{\infty}}\right).$$
+
+    Obtaining formulae for various representations of $\mathbb{T}$ from this one is easier now,
+    as we need only pass through a homeomorphism.
+</p>
+<!-- </div>
+</details> -->
+<!-- </div> -->

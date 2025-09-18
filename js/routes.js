@@ -1,134 +1,6 @@
+// TODO: Fetch global home and 404 pages once
 // Debug flag
-const DEBUG = false;
-
-// TODO: Add support for the Additional Topics sections in each chapter
-const routes = {
-    404: {
-        template: '/pages/404.html',
-        title: '404',
-        description: 'Page not found!'
-    },
-
-    '/': {
-        template: '/pages/home.html',
-        title: 'Home',
-        description: 'Hatcher Algebraic Topology Solutions Home Page'
-    },
-
-    '/chapter-chptr': {
-        template: '/sols/chptr/chptr.html',
-        title: 'Chapter chptr',
-        description: 'Chapter chptr Exercises'
-    },
-
-    '/chapter-chptr/section-sec': {
-        template: '/sols/chptr/sec/sec.html',
-        title: 'Chapter chptr Section sec',
-        description: 'Chapter chptr Section sec Exercises'
-        
-    },
-    '/chapter-chptr/exercise-exer': {
-        template: '/sols/chptr/exer.html',
-        title: 'Chapter chptr Section exer',
-        description: 'Chapter chptr Exercise exer'
-    },
-
-    '/chapter-chptr/section-sec/exercise-exer': {
-        template: '/sols/chptr/sec/exer/exer.html',
-        title: 'Chapter chptr Section sec Exercise exer',
-        description: 'Chapter chptr Section sec Exercise exer'
-    },
-}
-
-
-/**
- * Need to be able to match routes.
- * Routes are split into these categories:
- *  - Home Page
- *  - Chapter Page
- *  - Chapter-Section Page
- *  - Chapter-Section-Solution Page
- *  - Chapter-Solution Page (only for chapter 0)
- *  - 404 Error Page
- * 
- * My matching function needs to be able to distinguish these categories based on the location
- * they will be denoted as follows:
- * 
- * - Home Page: /
- * - Chapter Page: /chapter-chptr
- * - Chapter-Section Page: /chapter-chptr/section-sec
- * - Chapter-Section-Solution Page: /chapter-chptr/section-sec/exercise-exer
- * - Chapter-Solution Page: /chapter-chptr/exercise-exer
- * - 404 Page: 404.html
- * 
- * On return of the class/type of the page, we load the content based on it
- * 
- * The basic control flow is:
- *  1. match the pattern of the url to one of the routes above
- *  2. replace the template, title, and description parameters with the correct ones
- */
-
-
- /**
-  * Matches each ``location`` to one of the routes in ``routes``.
-  * 
-  * If ``location`` is not matched, returns a 404 error.
- * @param {String} [location] - window location pathname
- */
-function matchRoute(location) {
-    if (location.length == 0 || location == "/") return '/';
-
-    const chptrPattern = /(\/chapter-([0-4]{1}))/;
-    const secPattern = /(\/section-(\d+))?/;
-    const exerPattern = /(\/exercise-(\d+))?/;
-
-    // $ to search until end of string
-    const match = location.match(chptrPattern.source + secPattern.source + exerPattern.source + /$/.source);
-    
-    if (!match) {
-        return [404, null, null, null];
-    }
-    
-    let [chptr, sec, exer] = [match[2], match[4], match[6]];
-
-    if (DEBUG) {
-        if (match) {
-            console.log("location matched with new regex");
-            console.log("match: ", location.match(/(\/chapter-(\d)+)(\/section-(\d)+)?(\/exercise-(\d)+)?/));
-            console.log("chapter: ", chptr);
-            console.log("section: ", sec);
-            console.log("exercise: ", exer);
-        }
-    }
-
-    let template = "";
-
-    if (sec === undefined && exer === undefined) template = "/chapter-chptr";
-    else if (exer === undefined) template = "/chapter-chptr/section-sec";
-    else if (sec === undefined) template = "/chapter-chptr/exercise-exer";
-    else template = "/chapter-chptr/section-sec/exercise-exer";
-
-    return [template, chptr, sec, exer];
-}
-
-
-/**
- * document.title = fillAndReplace(route.title, /chptr|sec|exer/g, { ``chptr``, ``sec``, ``exer`` });
- * 
- * has the same effect as 
- * 
- * document.title = route.title.replaceAll("chptr", ``chptr``).replaceAll("sec", ``sec``).replaceAll("exer", ``exer``);
- * 
- * if ``chptr``, ``sec``, and ``exer`` have been given values
- * @param {string} [text] - The text whose words are being replaced
- * @param {RegExp} [targets] - The targets to be replaced
- * @param {Record<string, string>} [values] - The values to replace the targeted words
- * @returns The string text with its targets replaced by the values
- */
-function fillAndReplace(text, targets, values) {
-    return text.replace(targets, match => values[match]);
-}
-
+const DEBUG = true;
 
 /**
  * Required to re-render dynamically loaded MathJax
@@ -138,9 +10,9 @@ function fillAndReplace(text, targets, values) {
  */
 function renderMathJax(container = document.body) {
     if (window.MathJax && MathJax.typesetPromise) {
-      MathJax.typesetPromise([container])
-        // .then(() => console.log("MathJax rendered"))
-        .catch(err => console.error("MathJax render error:", err));
+        MathJax.typesetPromise([container])
+            // .then(() => console.log("MathJax rendered"))
+            .catch(err => console.error("MathJax render error:", err));
     }
     else {
         //console.log("MathJax not ready, retrying...");
@@ -148,19 +20,107 @@ function renderMathJax(container = document.body) {
     }
 }
 
+const prep_funcs = {
+    async home(template_path) {
+        const template_fragment = await fetch(template_path)
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
+        return template_fragment;
+    },
+    // TODO: Swap to 404.html page in each catch block
+    async exercise(template_path, qual_path, title) {
+        /* Fetch Stage */
+        // Fetch Solution Template (as new HTML document object)
+        const template_fragment = await fetch(template_path)
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
 
-/**
- * Updates the contents of the solution container on the page, 
- * and sets the document title and meta description accordingly.
- * 
- * @param {string} [html] - The new HTML content to be inserted into the solution container.
- * @param {string} [title] - The new title for the document.
- * @param {string} [description] - The new meta description content.
- */
-function swapInnerHTML(html, title, description) {
-    document.getElementById("content").innerHTML = html;
-    document.title = title;
-    document.querySelector('meta[name="description"]').setAttribute("content", description);
+        // Fetch Exercise Statement
+        const statement_path = qual_path + '/statement.html';
+        const statement_html = await fetch(statement_path).then(res => res.text());
+
+        // Fetch Solution
+        const solution_path = qual_path + '/solution.html';
+        const solution_html = await fetch(solution_path).then(res => res.text()).catch(e => Error(e));
+
+        // Fetch exercise.json
+        const json_path = qual_path + '/exercise.json';
+        const exercise_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
+
+        // Fetch Hint Template
+        const hint_template_path = '/templates/hint-template.html';
+        const hint_fragment = await fetch(hint_template_path)
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
+        // Fetch Hints
+        const hints = [];
+        const num_hints = exercise_json['num_hints'];
+        for (let i = 1; i <= num_hints; i++) {
+            const hint_path = `${qual_path}/hints/hint-${i}.html`;
+            const hint = await fetch(hint_path).then(res => res.text());
+            hints.push(hint);
+        }
+
+
+        /* Build Stage */
+        template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = title;
+        template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html.trim();
+        template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html.trim();
+
+        if (hints) {
+            template_fragment.getElementsByClassName(['hint-container'])[0].classList.toggle('active');
+
+            const hint_details_innerHTML = hint_fragment.getElementsByClassName('hint-details')[0].innerHTML;
+            for (let i = 0; i < num_hints; i++) {
+                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML += hints[i];
+                template_fragment.getElementsByClassName('hint-container')[0].innerHTML += hint_fragment.body.innerHTML;
+                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML = hint_details_innerHTML;
+            }
+        }
+
+        return template_fragment;
+    },
+    async chapter(template_path, qual_path, title, chapter_num) {
+        /* Fetch Stage */
+        // Fetch Chapter Template (as new HTML document object)
+        const template_fragment = await fetch(template_path)
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
+        const exercise_fragment = await fetch('/templates/exercise-template.html')
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
+
+        // Fetch chapter.json
+        const json_path = qual_path + '/chapter.json';
+        const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
+        const chapter_fragment = await fetch(`/content/chapters/chapter-${chapter_num}/chapter-${chapter_num}.html`)
+            .then(res => res.text())
+            .then(html => new DOMParser().parseFromString(html, 'text/html'))
+            .catch(e => Error(e));
+        const num_exercises = chapter_json.num_exercises;
+
+        /* Build Stage */
+        // Chapter 0 is the only chapter without sections
+        if (chapter_num === '0') {
+            for (let i = 1; i <= num_exercises; i++) {
+                const exercise_title = `Exercise 0.${i}`;
+                const exercise_statement = await fetch(qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
+
+                exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+
+                exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+
+                chapter_fragment.body.getElementsByClassName('exercise-ol')[0].innerHTML += exercise_fragment.body.innerHTML;
+            }
+        }
+
+        return template_fragment;
+    }
 }
 
 
@@ -174,33 +134,76 @@ async function locationHandler() {
     let location = window.location.pathname;
     if (DEBUG) console.log('location: ', location);
 
-    if (location.length == 0) location = '/';
+    const group_id_pairs = location.split('/')
+        .filter(string => string !== '')
+        .map(arr => arr.split('-'));
 
-    const params = matchRoute(location);
-    if (DEBUG) console.log("params", params);
+    console.log('group_id_pairs:', group_id_pairs);
+    let qual_path = '/content';
+    group_id_pairs.forEach(group_id_pair => {
+        const group = group_id_pair[0];
+        const id = group_id_pair[1];
 
-    const route  = routes[params[0]];
-    const chptr  = params[1];
-    const sec    = params[2];
-    const exer   = params[3];
+        qual_path += `/${group}s/${group}-${id}`;
+    });
 
-    const targets = /chptr|sec|exer/g;
-    const values  = { chptr, sec, exer };
-    
-    const template = fillAndReplace(route.template, targets, values);
-    if (DEBUG) console.log("template: ", template);
+    console.log('qual_path: ', qual_path);
+    const qual_id = group_id_pairs.map(arr => arr[1]).join('.');
 
-    const response = await fetch(template);
-    if (DEBUG) console.log("response: ", response);
+    let template_path;
+    let template_fragment;
+    let title;
+    let description;
+    let keywords;
 
-    if (!response.ok) {
-        const errorPage = await fetch(routes[404].template).then(response => response.text());
-        swapInnerHTML(errorPage, routes[404].title, routes[404].description);
-        return;
+    const group = !group_id_pairs.length ? '' : group_id_pairs.at(-1)[0];
+    console.log(group);
+    switch (group) {
+        case '':
+            template_path = '/templates/home.html';
+            title = 'Home';
+            description = 'Hatcher - Algebraic Topology Solutions: Home Page';
+            keywords = 'Hatcher, Algebraic Topology, Solutions, Solution';
+            template_fragment = prep_funcs.home(template_path);
+            break;
+
+        case 'chapter':
+            title = `Chapter ${qual_id}`;
+            keywords = ``;
+            description = `Hatcher - Algebraic Topology Chapter ${qual_id}`;
+
+            template_path = '/templates/chapter-template.html';
+            template_fragment = prep_funcs.chapter(template_path, qual_path, title, qual_id);
+            break;
+
+        case 'exercise':
+            title = `Exercise ${qual_id}`;
+            keywords = `Hatcher, Exercise ${qual_id}`;
+            description = `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`;
+
+            template_path = '/templates/solution-template.html';
+            template_fragment = prep_funcs.exercise(template_path, qual_path, title);
+            break;
+
+        case 'lemmas':
+            template_path = '/templates/lemmas-template.html';
+            break;
+
+        case 'lemma':
+            template_path = '/templates/lemmma-template.html';
+            break;
+
+        default:
+            template_path = '/templates/404.html';
+            break;
     }
 
-    const html = await response.text();
-    swapInnerHTML(html, fillAndReplace(route.title, targets, values), fillAndReplace(route.description, targets, values));
+    // Set Metadata of Page
+    document.title = title;
+    document.querySelector('meta[name="description"]').setAttribute("content", description);
+    document.getElementById('content').innerHTML = await template_fragment.then(res => res.body.innerHTML);
+
+    // Render Injected MathJax
     renderMathJax(document.getElementById("content"));
 }
 
@@ -229,14 +232,14 @@ function route(event) {
  */
 document.addEventListener('click', (e) => {
     const { target } = e;
-    
+
     if (target.matches('a')) {
         const href = target.getAttribute('href');
 
         // URL(url, base) constructs a structured URL link from a string url and a base string
         // In this case, window.location.origin is something line https://mywebsite.com
         const linkURL = new URL(href, window.location.origin);
-        
+
         // If the link is internal, go to custom routing
         if (linkURL.origin == window.location.origin) {
             e.preventDefault();
