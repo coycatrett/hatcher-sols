@@ -21,15 +21,16 @@ function renderMathJax(container = document.body) {
 }
 
 const prep_funcs = {
-    async home(template_path) {
-        const template_fragment = await fetch(template_path)
+    async home(prep_data) {
+        const template_fragment = await fetch(prep_data.template_path)
             .then(res => res.text())
             .then(html => new DOMParser().parseFromString(html, 'text/html'))
             .catch(e => Error(e));
         return template_fragment;
     },
     // TODO: Swap to 404.html page in each catch block
-    async exercise(template_path, qual_path, title) {
+    async exercise(prep_data) {
+        const { template_path, qual_path, title } = prep_data;
         /* Fetch Stage */
         // Fetch Solution Template (as new HTML document object)
         const template_fragment = await fetch(template_path)
@@ -74,34 +75,39 @@ const prep_funcs = {
             template_fragment.getElementsByClassName(['hint-container'])[0].classList.toggle('active');
 
             const hint_details_innerHTML = hint_fragment.getElementsByClassName('hint-details')[0].innerHTML;
-            for (let i = 0; i < num_hints; i++) {
-                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML += hints[i];
+            hints.forEach(hint => {
+                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML += hint;
                 template_fragment.getElementsByClassName('hint-container')[0].innerHTML += hint_fragment.body.innerHTML;
                 hint_fragment.getElementsByClassName('hint-details')[0].innerHTML = hint_details_innerHTML;
-            }
+            });
         }
 
         return template_fragment;
     },
-    async chapter(template_path, qual_path, title, chapter_num) {
+    async chapter(prep_data /*template_path, qual_path, title, chapter_num*/) {
         /* Fetch Stage */
         // Fetch Chapter Template (as new HTML document object)
-        const template_fragment = await fetch(template_path)
+        const template_fragment = await fetch(prep_data.template_path)
             .then(res => res.text())
             .then(html => new DOMParser().parseFromString(html, 'text/html'))
             .catch(e => Error(e));
+
         const exercise_fragment = await fetch('/templates/exercise-template.html')
             .then(res => res.text())
             .then(html => new DOMParser().parseFromString(html, 'text/html'))
             .catch(e => Error(e));
 
         // Fetch chapter.json
-        const json_path = qual_path + '/chapter.json';
+        const chapter_num = prep_data.qual_id;
+        const json_path = prep_data.qual_path + '/chapter.json';
         const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
+
+        // TODO: Refactor and remove! This is temporary. Functionality will transfer to template_fragment
         const chapter_fragment = await fetch(`/content/chapters/chapter-${chapter_num}/chapter-${chapter_num}.html`)
             .then(res => res.text())
             .then(html => new DOMParser().parseFromString(html, 'text/html'))
             .catch(e => Error(e));
+
         const num_exercises = chapter_json.num_exercises;
 
         /* Build Stage */
@@ -109,17 +115,21 @@ const prep_funcs = {
         if (chapter_num === '0') {
             for (let i = 1; i <= num_exercises; i++) {
                 const exercise_title = `Exercise 0.${i}`;
-                const exercise_statement = await fetch(qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
+                const exercise_statement = await fetch(prep_data.qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
 
                 exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-
                 exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
 
-                chapter_fragment.body.getElementsByClassName('exercise-ol')[0].innerHTML += exercise_fragment.body.innerHTML;
+                // Create anchor tag around exercise
+                const exerciseLink = document.createElement('a');
+                exerciseLink.href = `/chapter-${chapter_num}/exercise-${i}`;
+                exerciseLink.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
+
+                // TODO: This should be the template_fragment, not the chapter fragment specifically
+                chapter_fragment.body.getElementsByClassName('exercise-ul')[0].appendChild(exerciseLink);
             }
         }
-
-        return template_fragment;
+        return chapter_fragment; // TODO: this should not return chapter fragment, it should return template fragment
     }
 }
 
@@ -147,42 +157,73 @@ async function locationHandler() {
         qual_path += `/${group}s/${group}-${id}`;
     });
 
-    console.log('qual_path: ', qual_path);
+    if (DEBUG) console.log('qual_path: ', qual_path);
     const qual_id = group_id_pairs.map(arr => arr[1]).join('.');
 
-    let template_path;
-    let template_fragment;
+    // can these be global?? pretty sure... need to think about it
     let title;
-    let description;
-    let keywords;
+
+    let meta_data = {
+        title: '',
+        description: '',
+        keywords: ''
+    }
+
+    let prep_data = {
+        template_path: '',
+        qual_path: qual_path,
+        qual_id: qual_id,
+        title: ''
+    }
 
     const group = !group_id_pairs.length ? '' : group_id_pairs.at(-1)[0];
-    console.log(group);
+    if (DEBUG) console.log(group);
+
     switch (group) {
         case '':
-            template_path = '/templates/home.html';
             title = 'Home';
-            description = 'Hatcher - Algebraic Topology Solutions: Home Page';
-            keywords = 'Hatcher, Algebraic Topology, Solutions, Solution';
-            template_fragment = prep_funcs.home(template_path);
+
+            prep_data.title = title;
+            prep_data.template_path = '/templates/home.html';
+
+            meta_data = {
+                title: title,
+                description: 'Hatcher - Algebraic Topology Solutions: Home Page',
+                keywords: 'Hatcher, Algebraic Topology, Solutions, Solution'
+            }
+
+            template_fragment = prep_funcs.home(prep_data);
             break;
 
         case 'chapter':
             title = `Chapter ${qual_id}`;
-            keywords = ``;
-            description = `Hatcher - Algebraic Topology Chapter ${qual_id}`;
 
-            template_path = '/templates/chapter-template.html';
-            template_fragment = prep_funcs.chapter(template_path, qual_path, title, qual_id);
+            prep_data.title = title;
+            prep_data.template_path = '/templates/chapter-template.html';
+
+            meta_data = {
+                title: title,
+                keywords: ``,
+                description: `Hatcher - Algebraic Topology Chapter ${qual_id}`
+            }
+
+            // template_path = '/templates/chapter-template.html';
+            template_fragment = prep_funcs.chapter(prep_data /*template_path, qual_path, title, qual_id*/);
             break;
 
         case 'exercise':
             title = `Exercise ${qual_id}`;
-            keywords = `Hatcher, Exercise ${qual_id}`;
-            description = `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`;
 
-            template_path = '/templates/solution-template.html';
-            template_fragment = prep_funcs.exercise(template_path, qual_path, title);
+            prep_data.title = title;
+            prep_data.template_path = '/templates/solution-template.html';
+
+            meta_data = {
+                title: title,
+                description: `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`,
+                keywords: `Hatcher, Exercise ${qual_id}`
+            }
+
+            template_fragment = prep_funcs.exercise(prep_data);
             break;
 
         case 'lemmas':
@@ -199,8 +240,8 @@ async function locationHandler() {
     }
 
     // Set Metadata of Page
-    document.title = title;
-    document.querySelector('meta[name="description"]').setAttribute("content", description);
+    document.title = meta_data.title;
+    document.querySelector('meta[name="description"]').setAttribute("content", meta_data.description);
     document.getElementById('content').innerHTML = await template_fragment.then(res => res.body.innerHTML);
 
     // Render Injected MathJax
