@@ -20,12 +20,21 @@ function renderMathJax(container = document.body) {
     }
 }
 
+async function fetchFragment(fragment_path) {
+    try {
+        const res = await fetch(fragment_path);
+        const html = await res.text();
+        return new DOMParser().parseFromString(html, 'text/html');
+    }
+    catch (e) {
+        throw new Error(`Failed to fetch/parse HTML: ${e.message}`);
+    }
+}
+
 const prep_funcs = {
     async home(prep_data) {
-        const template_fragment = await fetch(prep_data.template_path)
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const { template_path } = prep_data;
+        const template_fragment = await fetchFragment(template_path)
         return template_fragment;
     },
     // TODO: Swap to 404.html page in each catch block
@@ -33,10 +42,7 @@ const prep_funcs = {
         const { template_path, qual_path, title } = prep_data;
         /* Fetch Stage */
         // Fetch Solution Template (as new HTML document object)
-        const template_fragment = await fetch(template_path)
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const template_fragment = await fetchFragment(template_path);
 
         // Fetch Exercise Statement
         const statement_path = qual_path + '/statement.html';
@@ -52,10 +58,8 @@ const prep_funcs = {
 
         // Fetch Hint Template
         const hint_template_path = '/templates/hint-template.html';
-        const hint_fragment = await fetch(hint_template_path)
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const hint_fragment = await fetchFragment(hint_template_path);
+
         // Fetch Hints
         const hints = [];
         const num_hints = exercise_json['num_hints'];
@@ -64,7 +68,6 @@ const prep_funcs = {
             const hint = await fetch(hint_path).then(res => res.text());
             hints.push(hint);
         }
-
 
         /* Build Stage */
         template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = title;
@@ -84,29 +87,21 @@ const prep_funcs = {
 
         return template_fragment;
     },
-    async chapter(prep_data /*template_path, qual_path, title, chapter_num*/) {
+    async chapter(prep_data) {
+        const { template_path, qual_path, qual_id, title } = prep_data;
         /* Fetch Stage */
         // Fetch Chapter Template (as new HTML document object)
-        const template_fragment = await fetch(prep_data.template_path)
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const template_fragment = await fetchFragment(template_path);
 
-        const exercise_fragment = await fetch('/templates/exercise-template.html')
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const exercise_fragment = await fetchFragment('/templates/exercise-template.html')
 
         // Fetch chapter.json
-        const chapter_num = prep_data.qual_id;
-        const json_path = prep_data.qual_path + '/chapter.json';
+        const chapter_num = qual_id;
+        const json_path = qual_path + '/chapter.json';
         const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
 
         // TODO: Refactor and remove! This is temporary. Functionality will transfer to template_fragment
-        const chapter_fragment = await fetch(`/content/chapters/chapter-${chapter_num}/chapter-${chapter_num}.html`)
-            .then(res => res.text())
-            .then(html => new DOMParser().parseFromString(html, 'text/html'))
-            .catch(e => Error(e));
+        const chapter_fragment = await fetchFragment(`/content/chapters/chapter-${chapter_num}/chapter-${chapter_num}.html`);
 
         const num_exercises = chapter_json.num_exercises;
 
@@ -115,7 +110,7 @@ const prep_funcs = {
         if (chapter_num === '0') {
             for (let i = 1; i <= num_exercises; i++) {
                 const exercise_title = `Exercise 0.${i}`;
-                const exercise_statement = await fetch(prep_data.qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
+                const exercise_statement = await fetch(qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
 
                 exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
                 exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
@@ -144,21 +139,21 @@ async function locationHandler() {
     let location = window.location.pathname;
     if (DEBUG) console.log('location: ', location);
 
-    const group_id_pairs = location.split('/')
+    // An example of a field-id pair is ['chapter', '0'] or ['exercise', '12'] or ['','']
+    const field_id_pairs = location.split('/')
         .filter(string => string !== '')
         .map(arr => arr.split('-'));
+    if (DEBUG) console.log('field_id_pairs:', field_id_pairs);
 
-    console.log('group_id_pairs:', group_id_pairs);
-    let qual_path = '/content';
-    group_id_pairs.forEach(group_id_pair => {
-        const group = group_id_pair[0];
-        const id = group_id_pair[1];
-
-        qual_path += `/${group}s/${group}-${id}`;
-    });
-
+    // Qualified path in file tree corresponding to the specified location
+    let qual_path =
+        field_id_pairs.reduce((partial_qual_path, field_id_pair) => {
+            const [field, id] = field_id_pair;
+            return partial_qual_path + `/${field}s/${field}-${id}`
+        }, '/content');
     if (DEBUG) console.log('qual_path: ', qual_path);
-    const qual_id = group_id_pairs.map(arr => arr[1]).join('.');
+
+    const qual_id = field_id_pairs.map(arr => arr[1]).join('.');
 
     // can these be global?? pretty sure... need to think about it
     let title;
@@ -176,10 +171,11 @@ async function locationHandler() {
         title: ''
     }
 
-    const group = !group_id_pairs.length ? '' : group_id_pairs.at(-1)[0];
-    if (DEBUG) console.log(group);
+    // The last field determines how to get to that field in the file tree
+    const field = !field_id_pairs.length ? '' : field_id_pairs.at(-1)[0];
+    if (DEBUG) console.log('field: ', field);
 
-    switch (group) {
+    switch (field) {
         case '':
             title = 'Home';
 
@@ -207,8 +203,7 @@ async function locationHandler() {
                 description: `Hatcher - Algebraic Topology Chapter ${qual_id}`
             }
 
-            // template_path = '/templates/chapter-template.html';
-            template_fragment = prep_funcs.chapter(prep_data /*template_path, qual_path, title, qual_id*/);
+            template_fragment = prep_funcs.chapter(prep_data);
             break;
 
         case 'exercise':
