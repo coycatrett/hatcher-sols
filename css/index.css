@@ -158,10 +158,6 @@ header {
     flex-direction: column;
     padding-left: 0.25em;
     text-decoration: none;
-}
-
-
-.mm-link:visited {
     color: var(--hatcherblue);
 }
 

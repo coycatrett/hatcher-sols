@@ -7,6 +7,9 @@
     display: inline-block;
     color: inherit;
     text-decoration: none;
+    width: 75em;
+
+    margin: 1pt 0;
 
     will-change: transform box-shadow;
     transform: scale(1) perspective(1px) translateZ(0);
