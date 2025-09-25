@@ -142,8 +142,8 @@ const prep_funcs = {
         /* Build Stage */
         // Chapter 0 is the only chapter without sections
         // TODO: Need to style the chapter 0 exercises correctly. The hover effect and highlighting looks weird
+        const num_exercises = chapter_json.num_exercises;
         if (chapter_num === '0') {
-            const num_exercises = chapter_json.num_exercises;
             const exercise_ul = document.createElement('ul');
             exercise_ul.setAttribute('class', 'exercise-ul');
 
@@ -166,7 +166,34 @@ const prep_funcs = {
 
             template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(exercise_ul);
         }
+        else {
+            for (let section_num = 1; section_num <= sections[chapter_num].length; section_num++) {
+                const section_header = document.createElement('h2');
+                section_header.setAttribute('class', 'section-title');
+                section_header.innerHTML = sections[chapter_num][section_num - 1];
+                template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(section_header);
 
+                const exercise_ul = document.createElement('ul');
+                exercise_ul.setAttribute('class', 'exercise-ul');
+                for (let i = 1; i <= num_exercises[section_num - 1]; i++) {
+                    const exercise_title = `Exercise ${chapter_num}.${section_num}.${i}`;
+                    const exercise_statement = await fetch(qual_path + `/sections/section-${section_num}/exercises/exercise-${i}/statement.html`).then(res => res.text());
+
+                    exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+                    exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+
+                    // Create anchor tag around exercise
+                    const exercise_anchor = document.createElement('a');
+                    exercise_anchor.href = `/chapter-${chapter_num}/section-${section_num}/exercise-${i}`;
+
+                    // Append a clone of the static exercise_fragment (to not empty out source)
+                    exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
+
+                    exercise_ul.appendChild(exercise_anchor);
+                }
+                template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(exercise_ul);
+            }
+        }
         return template_fragment
     }
 }
