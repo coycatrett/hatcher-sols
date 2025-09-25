@@ -31,6 +31,42 @@ async function fetchFragment(fragment_path) {
     }
 }
 
+const chapters = [
+    "Chapter 0. Some Underlying Geometric Notions",
+    "Chapter 1. The Fundamental Group",
+    "Chapter 2. Homology",
+    "Chapter 3. Cohomology",
+    "Chapter 4. Homotopy Theory"
+]
+
+const sections = [
+    [],
+    [
+        "1.1 Basic Constructions",
+        "1.2 Van Kampen's Theorem",
+        "1.3 Covering Spaces",
+        "Additional Topics"
+    ],
+    [
+        "2.1 Simplicial and Singular Homology",
+        "2.2 Computations and Applications",
+        "2.3 The Formal Viewpoint",
+        "Additional Topics"
+    ],
+    [
+        "3.1 Cohomology Groups",
+        "3.2 Cup Product",
+        "3.3 Poincare Duality",
+        "Additional Topics"
+    ],
+    [
+        "4.1 Homotopy Groups",
+        "4.2 Elementary Methods of Calculation",
+        "4.3 Connections with Cohomology",
+        "Additional Topics"
+    ]
+]
+
 const prep_funcs = {
     async home(prep_data) {
         const { template_path } = prep_data;
@@ -39,7 +75,8 @@ const prep_funcs = {
     },
     // TODO: Swap to 404.html page in each catch block
     async exercise(prep_data) {
-        const { template_path, qual_path, title } = prep_data;
+        const { template_path, qual_path } = prep_data;
+        const exercise_title = prep_data.title;
         /* Fetch Stage */
         // Fetch Solution Template (as new HTML document object)
         const template_fragment = await fetchFragment(template_path);
@@ -70,7 +107,7 @@ const prep_funcs = {
         }
 
         /* Build Stage */
-        template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = title;
+        template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
         template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html.trim();
         template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html.trim();
 
@@ -88,7 +125,8 @@ const prep_funcs = {
         return template_fragment;
     },
     async chapter(prep_data) {
-        const { template_path, qual_path, qual_id, title } = prep_data;
+        const { template_path, qual_path } = prep_data;
+        const chapter_num = prep_data.qual_id;
         /* Fetch Stage */
         // Fetch Chapter Template (as new HTML document object)
         const template_fragment = await fetchFragment(template_path);
@@ -96,18 +134,19 @@ const prep_funcs = {
         const exercise_fragment = await fetchFragment('/templates/exercise-template.html')
 
         // Fetch chapter.json
-        const chapter_num = qual_id;
         const json_path = qual_path + '/chapter.json';
         const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
 
-        // TODO: Refactor and remove! This is temporary. Functionality will transfer to template_fragment
-        const chapter_fragment = await fetchFragment(`/content/chapters/chapter-${chapter_num}/chapter-${chapter_num}.html`);
-
-        const num_exercises = chapter_json.num_exercises;
+        template_fragment.body.getElementsByClassName('chapter-title')[0].innerHTML = chapters[chapter_num];
 
         /* Build Stage */
         // Chapter 0 is the only chapter without sections
+        // TODO: Need to style the chapter 0 exercises correctly. The hover effect and highlighting looks weird
         if (chapter_num === '0') {
+            const num_exercises = chapter_json.num_exercises;
+            const exercise_ul = document.createElement('ul');
+            exercise_ul.setAttribute('class', 'exercise-ul');
+
             for (let i = 1; i <= num_exercises; i++) {
                 const exercise_title = `Exercise 0.${i}`;
                 const exercise_statement = await fetch(qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
@@ -116,15 +155,19 @@ const prep_funcs = {
                 exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
 
                 // Create anchor tag around exercise
-                const exerciseLink = document.createElement('a');
-                exerciseLink.href = `/chapter-${chapter_num}/exercise-${i}`;
-                exerciseLink.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
+                const exercise_anchor = document.createElement('a');
+                exercise_anchor.href = `/chapter-${chapter_num}/exercise-${i}`;
 
-                // TODO: This should be the template_fragment, not the chapter fragment specifically
-                chapter_fragment.body.getElementsByClassName('exercise-ul')[0].appendChild(exerciseLink);
+                // Append a clone of the static exercise_fragment (to not empty out source)
+                exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
+
+                exercise_ul.appendChild(exercise_anchor);
             }
+
+            template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(exercise_ul);
         }
-        return chapter_fragment; // TODO: this should not return chapter fragment, it should return template fragment
+
+        return template_fragment
     }
 }
 
@@ -192,7 +235,7 @@ async function locationHandler() {
             break;
 
         case 'chapter':
-            title = `Chapter ${qual_id}`;
+            title = chapters[qual_id];
 
             prep_data.title = title;
             prep_data.template_path = '/templates/chapter-template.html';
