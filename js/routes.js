@@ -1,6 +1,9 @@
-// TODO: Fetch global home and 404 pages once
+import { chapters, sections } from '/data/toc_data.js';
+
 // Debug flag
 const DEBUG = true;
+
+// TODO: Fetch global home and 404 pages once
 
 /**
  * Required to re-render dynamically loaded MathJax
@@ -30,42 +33,6 @@ async function fetchFragment(fragment_path) {
         throw new Error(`Failed to fetch/parse HTML: ${e.message}`);
     }
 }
-
-const chapters = [
-    "Chapter 0. Some Underlying Geometric Notions",
-    "Chapter 1. The Fundamental Group",
-    "Chapter 2. Homology",
-    "Chapter 3. Cohomology",
-    "Chapter 4. Homotopy Theory"
-]
-
-const sections = [
-    [],
-    [
-        "1.1 Basic Constructions",
-        "1.2 Van Kampen's Theorem",
-        "1.3 Covering Spaces",
-        "Additional Topics"
-    ],
-    [
-        "2.1 Simplicial and Singular Homology",
-        "2.2 Computations and Applications",
-        "2.3 The Formal Viewpoint",
-        "Additional Topics"
-    ],
-    [
-        "3.1 Cohomology Groups",
-        "3.2 Cup Product",
-        "3.3 Poincare Duality",
-        "Additional Topics"
-    ],
-    [
-        "4.1 Homotopy Groups",
-        "4.2 Elementary Methods of Calculation",
-        "4.3 Connections with Cohomology",
-        "Additional Topics"
-    ]
-]
 
 const prep_funcs = {
     async home(prep_data) {
@@ -137,11 +104,11 @@ const prep_funcs = {
         const json_path = qual_path + '/chapter.json';
         const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
 
-        template_fragment.body.getElementsByClassName('chapter-title')[0].innerHTML = chapters[chapter_num];
+        template_fragment.body.getElementsByClassName('chapter-title')[0].innerHTML = chapters[chapter_num].title;
 
         /* Build Stage */
         // Chapter 0 is the only chapter without sections
-        // TODO: Need to style the chapter 0 exercises correctly. The hover effect and highlighting looks weird
+        // TODO: these cases have a lot of overlap. refactor this into a function
         const num_exercises = chapter_json.num_exercises;
         if (chapter_num === '0') {
             const exercise_ul = document.createElement('ul');
@@ -227,6 +194,7 @@ async function locationHandler() {
 
     // can these be global?? pretty sure... need to think about it
     let title;
+    let template_fragment;
 
     let meta_data = {
         title: '',
@@ -244,6 +212,13 @@ async function locationHandler() {
     // The last field determines how to get to that field in the file tree
     const field = !field_id_pairs.length ? '' : field_id_pairs.at(-1)[0];
     if (DEBUG) console.log('field: ', field);
+
+    // TODO: refactor this into a dictionary instead of a switch case
+    // each key is the current field name
+    // each value is a dictionary with the title, template_path, prep_func, and anything else
+    // Some how the below is useful?
+    // const routeConfig = routes[field] || { template: "/templates/404.html" };
+    // const fragment = await routeConfig.prep?.(prep_data) ?? await fetchFragment(routeConfig.template);
 
     switch (field) {
         case '':
@@ -281,7 +256,7 @@ async function locationHandler() {
 
             prep_data.title = title;
             prep_data.template_path = '/templates/solution-template.html';
-
+            console.log("qual_id: ", qual_id);
             meta_data = {
                 title: title,
                 description: `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`,
