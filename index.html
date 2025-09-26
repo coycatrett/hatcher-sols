@@ -33,7 +33,7 @@
     <!-- Load MathJax config and MathJax -->
     <script src="/js/mathjax-config.js" defer></script>
 
-    <script src="/js/routes.js" defer></script>
+    <script type="module" src="/js/routes.js" defer></script>
 
     <script src="/js/index.js" defer></script>
 </head>
@@ -110,3 +110,40 @@
 </body>
 
 </html>
+
+<!-- Chapter Template -->
+<template>
+    <div class="chapter-container">
+        <h1 class="chapter-title"></h1>
+    </div>
+</template>
+
+<!-- Exercise Template -->
+<template>
+    <li class="exercise-li" href="">
+        <span class="exercise-title"></span>
+        <p class="exercise-statement"></p>
+    </li>
+</template>
+
+<!-- Hint Template -->
+<template>
+    <details class="hint-details">
+        <summary summary-open="Close Hint" summary-closed="Hint"></summary>
+    </details>
+</template>
+
+<!-- Solution Template -->
+<template>
+    <div class="exercise-container">
+        <h1 class="exercise-title"></h1>
+        <p class="exercise-statement"></p>
+
+        <div class="hint-container"></div>
+
+        <details class="solution-details">
+            <summary summary-open="Solution" summary-closed="Solution"></summary>
+            <div class="solution-container"></div>
+        </details>
+    </div>
+</template>
