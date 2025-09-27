@@ -1,12 +1,3 @@
-
-const chapter_titles = [
-    'Chapter 0. Some Underlying Geometric Notions',
-    'Chapter 1. The Fundamental Group',
-    'Chapter 2. Homology',
-    'Chapter 3. Cohomology',
-    'Chapter 4. Homotopy Theory'
-]
-
 // description = 'Solutions to Allen Hatcher\'s Algebraic Topology - ${title}';
 
 export const toc = {
@@ -52,7 +43,7 @@ export const toc = {
         sections: {
             1: {
                 title: '2.1. Simplicial and Singular Homology',
-                exercises: [1, 2],
+                exercises: [],
                 extras: []
             },
             2: {
@@ -89,7 +80,7 @@ export const toc = {
         sections: {
             1: {
                 title: '3.1. Cohomology Groups',
-                exercises: [1, 2],
+                exercises: [],
                 extras: []
             },
             2: {
@@ -151,7 +142,7 @@ export const toc = {
         sections: {
             1: {
                 title: '4.1. Homotopy Groups',
-                exercises: [1, 2],
+                exercises: [],
                 extras: []
             },
             2: {
@@ -231,104 +222,3 @@ export const toc = {
 }
 
 // TODO: make description function and keywords function
-
-export const chapters = [
-    {
-        title: chapter_titles[0],
-        num_exercises: 2,  // these are the only fields that are dynamic. could add it at the end...
-        num_additional_exercises: 0,
-        meta_data: {
-            title: chapter_titles[0],
-            description: 'Hatcher - Algebraic Topology Solutions: ' + chapter_titles[0],
-            keywords: ''
-        }
-    },
-    {
-        title: chapter_titles[1],
-        num_exercises: [
-            2,
-            0,
-            0,
-            0
-        ],
-        num_additional_exercises: 0,
-        meta_data: {
-            title: chapter_titles[1],
-            description: 'Hatcher - Algebraic Topology Solutions: ' + chapter_titles[1],
-            keywords: ''
-        }
-    },
-    {
-        title: chapter_titles[2],
-        num_exercises: [
-            0,
-            0,
-            0,
-            0
-        ],
-        num_additional_exercises: 0,
-        meta_data: {
-            title: chapter_titles[2],
-            description: 'Hatcher - Algebraic Topology Solutions: ' + chapter_titles[2],
-            keywords: ''
-        }
-    },
-    {
-        title: chapter_titles[3],
-        num_exercises: [
-            0,
-            0,
-            0,
-            0
-        ],
-        num_additional_exercises: 0,
-        meta_data: {
-            title: chapter_titles[3],
-            description: 'Hatcher - Algebraic Topology Solutions: ' + chapter_titles[3],
-            keywords: ''
-        }
-    },
-    {
-        title: chapter_titles[4],
-        num_exercises: [
-            0,
-            0,
-            0,
-            0
-        ],
-        num_additional_exercises: 0,
-        meta_data: {
-            title: chapter_titles[4],
-            description: 'Hatcher - Algebraic Topology Solutions: ' + chapter_titles[4],
-            keywords: ''
-        }
-    }
-]
-
-export const sections = [
-    [],
-    [
-        '1.1 Basic Constructions',
-        '1.2 Van Kampen\'s Theorem',
-        '1.3 Covering Spaces',
-        'Additional Topics'
-    ],
-    [
-        '2.1 Simplicial and Singular Homology',
-        '2.2 Computations and Applications',
-        '2.3 The Formal Viewpoint',
-        'Additional Topics'
-    ],
-    [
-        '3.1 Cohomology Groups',
-        '3.2 Cup Product',
-        '3.3 Poincare Duality',
-        'Additional Topics'
-    ],
-    [
-        '4.1 Homotopy Groups',
-        '4.2 Elementary Methods of Calculation',
-        '4.3 Connections with Cohomology',
-        'Additional Topics'
-    ]
-]
