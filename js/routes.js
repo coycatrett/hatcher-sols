@@ -1,4 +1,4 @@
-import { chapters, sections } from '/data/toc_data.js';
+import { toc } from '/data/toc_data.js';
 
 // Debug flag
 const DEBUG = true;
@@ -34,6 +34,24 @@ async function fetchFragment(fragment_path) {
     }
 }
 
+// TODO: Improve variable names and readability
+async function createExerciseAnchor(exercise_title, statement_path, href, exercise_fragment, exercise_ul) {
+    const exercise_statement = await fetch(statement_path).then(res => res.text());
+    // Create anchor tag around exercise
+    const exercise_anchor = document.createElement('a');
+    exercise_anchor.href = href;
+
+    exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+    exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+
+    // Append a clone of the static exercise_fragment (to not empty out source)
+    exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
+
+    exercise_ul.appendChild(exercise_anchor);
+    return exercise_ul;
+}
+
+// TODO: These aren't prep funcs anymore, these are generate or create functions
 const prep_funcs = {
     async home(prep_data) {
         const { template_path } = prep_data;
@@ -41,7 +59,8 @@ const prep_funcs = {
         return template_fragment;
     },
     // TODO: Swap to 404.html page in each catch block
-    async exercise(prep_data) {
+    // TODO: Refactor
+    async solution(prep_data) {
         const { template_path, qual_path } = prep_data;
         const exercise_title = prep_data.title;
         /* Fetch Stage */
@@ -56,9 +75,9 @@ const prep_funcs = {
         const solution_path = qual_path + '/solution.html';
         const solution_html = await fetch(solution_path).then(res => res.text()).catch(e => Error(e));
 
-        // Fetch exercise.json
-        const json_path = qual_path + '/exercise.json';
-        const exercise_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
+        // Fetch hints.json
+        const hints_json_path = qual_path + '/hints/hints.json';
+        const hints_json = await fetch(hints_json_path).then(res => res.json()).catch(e => Error(e));
 
         // Fetch Hint Template
         const hint_template_path = '/templates/hint-template.html';
@@ -66,7 +85,7 @@ const prep_funcs = {
 
         // Fetch Hints
         const hints = [];
-        const num_hints = exercise_json['num_hints'];
+        const num_hints = hints_json['num_hints'];
         for (let i = 1; i <= num_hints; i++) {
             const hint_path = `${qual_path}/hints/hint-${i}.html`;
             const hint = await fetch(hint_path).then(res => res.text());
@@ -75,8 +94,8 @@ const prep_funcs = {
 
         /* Build Stage */
         template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-        template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html.trim();
-        template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html.trim();
+        template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html;
+        template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html;
 
         if (hints) {
             template_fragment.getElementsByClassName(['hint-container'])[0].classList.toggle('active');
@@ -93,73 +112,52 @@ const prep_funcs = {
     },
     async chapter(prep_data) {
         const { template_path, qual_path } = prep_data;
-        const chapter_num = prep_data.qual_id;
-        /* Fetch Stage */
-        // Fetch Chapter Template (as new HTML document object)
+        const chapter = Number(prep_data.qual_id);
+
         const template_fragment = await fetchFragment(template_path);
+        const container = template_fragment.body.getElementsByClassName('chapter-container')[0];
+        const exercise_fragment = await fetchFragment('/templates/exercise-template.html');
 
-        const exercise_fragment = await fetchFragment('/templates/exercise-template.html')
+        container.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
 
-        // Fetch chapter.json
-        const json_path = qual_path + '/chapter.json';
-        const chapter_json = await fetch(json_path).then(res => res.json()).catch(e => Error(e));
-
-        template_fragment.body.getElementsByClassName('chapter-title')[0].innerHTML = chapters[chapter_num].title;
-
-        /* Build Stage */
-        // Chapter 0 is the only chapter without sections
-        // TODO: these cases have a lot of overlap. refactor this into a function
-        const num_exercises = chapter_json.num_exercises;
-        if (chapter_num === '0') {
-            const exercise_ul = document.createElement('ul');
-            exercise_ul.setAttribute('class', 'exercise-ul');
-
-            for (let i = 1; i <= num_exercises; i++) {
-                const exercise_title = `Exercise 0.${i}`;
-                const exercise_statement = await fetch(qual_path + `/exercises/exercise-${i}/statement.html`).then(res => res.text());
-
-                exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-                exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
-
-                // Create anchor tag around exercise
-                const exercise_anchor = document.createElement('a');
-                exercise_anchor.href = `/chapter-${chapter_num}/exercise-${i}`;
-
-                // Append a clone of the static exercise_fragment (to not empty out source)
-                exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
-
-                exercise_ul.appendChild(exercise_anchor);
-            }
-
-            template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(exercise_ul);
-        }
-        else {
-            for (let section_num = 1; section_num <= sections[chapter_num].length; section_num++) {
+        // Chapter 0 is the only chapter without sections; it runs once without any section data.
+        const num_sections = chapter === 0 ? 1 : 3;
+        for (let section = 0; section < num_sections; section++) {
+            if (chapter !== 0) {
                 const section_header = document.createElement('h2');
-                section_header.setAttribute('class', 'section-title');
-                section_header.innerHTML = sections[chapter_num][section_num - 1];
-                template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(section_header);
-
-                const exercise_ul = document.createElement('ul');
-                exercise_ul.setAttribute('class', 'exercise-ul');
-                for (let i = 1; i <= num_exercises[section_num - 1]; i++) {
-                    const exercise_title = `Exercise ${chapter_num}.${section_num}.${i}`;
-                    const exercise_statement = await fetch(qual_path + `/sections/section-${section_num}/exercises/exercise-${i}/statement.html`).then(res => res.text());
-
-                    exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-                    exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
-
-                    // Create anchor tag around exercise
-                    const exercise_anchor = document.createElement('a');
-                    exercise_anchor.href = `/chapter-${chapter_num}/section-${section_num}/exercise-${i}`;
-
-                    // Append a clone of the static exercise_fragment (to not empty out source)
-                    exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
-
-                    exercise_ul.appendChild(exercise_anchor);
-                }
-                template_fragment.body.getElementsByClassName('chapter-container')[0].appendChild(exercise_ul);
+                section_header.className = 'section-title';
+                section_header.textContent = toc[chapter].sections[section + 1].title;
+                container.appendChild(section_header);
             }
+
+            const exercise_ul = document.createElement('ul');
+            exercise_ul.className = 'exercise-ul';
+            container.appendChild(exercise_ul);
+
+            const exercise_list = chapter === 0
+                ? toc[chapter].exercises
+                : toc[chapter].sections[section + 1].exercises;
+
+            // TODO: Refactor each of these ternaries into their own functions
+            const promises = exercise_list.map(exercise => {
+                const exercise_title = chapter == 0
+                    ? `Exercise 0.${exercise}`
+                    : `Exercise ${chapter}.${section + 1}.${exercise}`;
+
+                const exercise_statement_path = chapter == 0
+                    ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
+                    : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
+
+                const href = chapter == 0
+                    ? `/chapter-${chapter}/exercise-${exercise}`
+                    : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
+
+                return createExerciseAnchor(exercise_title, exercise_statement_path, href, exercise_fragment, exercise_ul);
+            });
+
+            await Promise.all(promises);
+
+            // TODO: Add support for extra exercises and additoinal topics
         }
         return template_fragment
     }
@@ -192,7 +190,6 @@ async function locationHandler() {
 
     const qual_id = field_id_pairs.map(arr => arr[1]).join('.');
 
-    // can these be global?? pretty sure... need to think about it
     let title;
     let template_fragment;
 
@@ -237,7 +234,7 @@ async function locationHandler() {
             break;
 
         case 'chapter':
-            title = chapters[qual_id];
+            title = toc[qual_id].title;
 
             prep_data.title = title;
             prep_data.template_path = '/templates/chapter-template.html';
@@ -256,14 +253,14 @@ async function locationHandler() {
 
             prep_data.title = title;
             prep_data.template_path = '/templates/solution-template.html';
-            console.log("qual_id: ", qual_id);
+
             meta_data = {
                 title: title,
                 description: `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`,
                 keywords: `Hatcher, Exercise ${qual_id}`
             }
 
-            template_fragment = prep_funcs.exercise(prep_data);
+            template_fragment = prep_funcs.solution(prep_data);
             break;
 
         case 'lemmas':
