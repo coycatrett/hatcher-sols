@@ -4,6 +4,18 @@ import { toc } from '/data/toc_data.js';
 const DEBUG = true;
 
 // TODO: Fetch global home and 404 pages once
+// TODO: Refactor so we grab templates from inedx.html (fewer network calls)
+
+const templates = {
+    chapter: document.getElementById('chapter-template'),
+    exercise: document.getElementById('exercise-template'),
+    hint: document.getElementById('hint-template'),
+    solution: document.getElementById('solution-template')
+}
+
+function cloneTemplate(name) {
+    return templates[name].content.firstElementChild.cloneNode(true);
+}
 
 /**
  * Required to re-render dynamically loaded MathJax
@@ -13,12 +25,11 @@ const DEBUG = true;
  */
 function renderMathJax(container = document.body) {
     if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([container])
-            // .then(() => console.log("MathJax rendered"))
-            .catch(err => console.error("MathJax render error:", err));
+        MathJax.typesetPromise([container]).catch(err => console.error("MathJax render error:", err));
     }
     else {
-        //console.log("MathJax not ready, retrying...");
+        // TODO: Could this get caught in an infinite loop?
+        console.log("MathJax not ready, retrying...");
         setTimeout(() => renderMathJax(container), 100);
     }
 }
@@ -65,23 +76,20 @@ const prep_funcs = {
         const exercise_title = prep_data.title;
         /* Fetch Stage */
         // Fetch Solution Template (as new HTML document object)
+        // TODO: Remove this fetch call
         const template_fragment = await fetchFragment(template_path);
 
         // Fetch Exercise Statement
-        const statement_path = qual_path + '/statement.html';
+        const statement_path = `${qual_path}/statement.html`;
         const statement_html = await fetch(statement_path).then(res => res.text());
 
         // Fetch Solution
-        const solution_path = qual_path + '/solution.html';
+        const solution_path = `${qual_path}/solution.html`;
         const solution_html = await fetch(solution_path).then(res => res.text()).catch(e => Error(e));
 
         // Fetch hints.json
-        const hints_json_path = qual_path + '/hints/hints.json';
+        const hints_json_path = `${qual_path}/hints/hints.json`;
         const hints_json = await fetch(hints_json_path).then(res => res.json()).catch(e => Error(e));
-
-        // Fetch Hint Template
-        const hint_template_path = '/templates/hint-template.html';
-        const hint_fragment = await fetchFragment(hint_template_path);
 
         // Fetch Hints
         const hints = [];
@@ -99,12 +107,16 @@ const prep_funcs = {
 
         if (hints) {
             template_fragment.getElementsByClassName(['hint-container'])[0].classList.toggle('active');
+            template_fragment.getElement
 
-            const hint_details_innerHTML = hint_fragment.getElementsByClassName('hint-details')[0].innerHTML;
             hints.forEach(hint => {
-                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML += hint;
-                template_fragment.getElementsByClassName('hint-container')[0].innerHTML += hint_fragment.body.innerHTML;
-                hint_fragment.getElementsByClassName('hint-details')[0].innerHTML = hint_details_innerHTML;
+                // Wrap hint in hint_div so that it is a DOM object that we can append to hint_fragment
+                const hint_fragment = cloneTemplate('hint');
+                const hint_div = document.createElement('div');
+                hint_div.innerHTML = hint;
+                hint_fragment.appendChild(hint_div);
+
+                template_fragment.getElementsByClassName('hint-container')[0].appendChild(hint_fragment);
             });
         }
 
