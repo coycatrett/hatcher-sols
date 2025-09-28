@@ -96,7 +96,7 @@ const prep_funcs = {
         const num_hints = hints_json['num_hints'];
         for (let i = 1; i <= num_hints; i++) {
             const hint_path = `${qual_path}/hints/hint-${i}.html`;
-            const hint = await fetch(hint_path).then(res => res.text());
+            const hint = await fetchFragment(hint_path);
             hints.push(hint);
         }
 
@@ -106,17 +106,13 @@ const prep_funcs = {
         template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html;
 
         if (hints) {
-            template_fragment.getElementsByClassName(['hint-container'])[0].classList.toggle('active');
-            template_fragment.getElement
+            const hint_container = template_fragment.getElementsByClassName('hint-container')[0];
+            hint_container.classList.toggle('active');
 
             hints.forEach(hint => {
-                // Wrap hint in hint_div so that it is a DOM object that we can append to hint_fragment
                 const hint_fragment = cloneTemplate('hint');
-                const hint_div = document.createElement('div');
-                hint_div.innerHTML = hint;
-                hint_fragment.appendChild(hint_div);
-
-                template_fragment.getElementsByClassName('hint-container')[0].appendChild(hint_fragment);
+                hint_fragment.appendChild(hint.body);
+                hint_container.appendChild(hint_fragment);
             });
         }
 
