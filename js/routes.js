@@ -83,6 +83,11 @@ const prep_funcs = {
 
         const [solution_html, statement_html, hints_json] = await Promise.all(promises);
 
+        // Set statement and solution
+        template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+        template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html;
+        template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html;
+
         // Fetch Hints
         const hints = [];
         const num_hints = hints_json['num_hints'];
@@ -91,11 +96,6 @@ const prep_funcs = {
             const hint = await fetchFragment(hint_path);
             hints.push(hint);
         }
-
-        // Build statement
-        template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-        template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html;
-        template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html;
 
         // Build hints
         if (hints) {
@@ -108,6 +108,7 @@ const prep_funcs = {
                 hint_container.appendChild(hint_fragment);
             });
         }
+
         return template_fragment;
     },
     async chapter(prep_data) {
@@ -115,7 +116,6 @@ const prep_funcs = {
         const chapter = Number(prep_data.qual_id);
 
         const template_fragment = cloneTemplate('chapter');
-
         template_fragment.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
 
         // Chapter 0 is the only chapter without sections; it runs once without any section data.
