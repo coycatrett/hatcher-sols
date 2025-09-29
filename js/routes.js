@@ -22,11 +22,11 @@ function cloneTemplate(name) {
  */
 function renderMathJax(container = document.body) {
     if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([container]).catch(err => console.error("MathJax render error:", err));
+        MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', err));
     }
     else {
         // TODO: Could this get caught in an infinite loop?
-        console.log("MathJax not ready, retrying...");
+        console.log('MathJax not ready, retrying...');
         setTimeout(() => renderMathJax(container), 100);
     }
 }
@@ -62,7 +62,7 @@ async function createExerciseAnchor(exercise_data, href, statement_path) {
 // TODO: These aren't prep funcs anymore, these are generate or create functions
 const prep_funcs = {
     async home() {
-        return fetchFragment('/templates/home.html');
+        return fetchFragment('/home.html');
     },
     // TODO: Swap to 404.html page in each catch block
     // TODO: Refactor
@@ -202,7 +202,6 @@ async function locationHandler() {
     }
 
     let prep_data = {
-        template_path: '',
         qual_path: qual_path,
         qual_id: qual_id,
         title: ''
@@ -224,7 +223,6 @@ async function locationHandler() {
             title = 'Home';
 
             prep_data.title = title;
-            prep_data.template_path = '/templates/home.html';
 
             meta_data = {
                 title: title,
@@ -236,11 +234,14 @@ async function locationHandler() {
             break;
 
         case 'chapter':
+            if (!toc[qual_id]) {
+                template_fragment = fetchFragment('/404.html');
+                break
+            }
             title = toc[qual_id].title;
 
-            prep_data.title = title;
-            prep_data.template_path = '/templates/chapter-template.html';
 
+            prep_data.title = title;
             meta_data = {
                 title: title,
                 keywords: ``,
@@ -252,9 +253,7 @@ async function locationHandler() {
 
         case 'exercise':
             title = `Exercise ${qual_id}`;
-
             prep_data.title = title;
-            prep_data.template_path = '/templates/solution-template.html';
 
             meta_data = {
                 title: title,
@@ -266,26 +265,25 @@ async function locationHandler() {
             break;
 
         case 'lemmas':
-            template_path = '/templates/lemmas-template.html';
             break;
 
         case 'lemma':
-            template_path = '/templates/lemmma-template.html';
             break;
 
         default:
-            template_path = '/templates/404.html';
+            console.log('ehrakjenr')
+            template_fragment = fetchFragment('/404.html');
+
             break;
     }
 
     // Set Metadata of Page
     document.title = meta_data.title;
-    document.querySelector('meta[name="description"]').setAttribute("content", meta_data.description);
-    console.log(template_fragment);
+    document.querySelector('meta[name="description"]').setAttribute('content', meta_data.description);
     document.getElementById('content').innerHTML = await template_fragment.then(res => res.outerHTML);
 
     // Render Injected MathJax
-    renderMathJax(document.getElementById("content"));
+    renderMathJax(document.getElementById('content'));
 }
 
 
