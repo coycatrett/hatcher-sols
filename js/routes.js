@@ -1,10 +1,7 @@
-import { toc } from '/data/toc_data.js';
+import { toc } from '../data/toc_data.js';
 
 // Debug flag
 const DEBUG = true;
-
-// TODO: Fetch global home and 404 pages once
-// TODO: Refactor so we grab templates from inedx.html (fewer network calls)
 
 const templates = {
     chapter: document.getElementById('chapter-template'),
@@ -34,11 +31,11 @@ function renderMathJax(container = document.body) {
     }
 }
 
-async function fetchFragment(fragment_path) {
+export async function fetchFragment(fragment_path) {
     try {
         const res = await fetch(fragment_path);
         const html = await res.text();
-        return new DOMParser().parseFromString(html, 'text/html');
+        return new DOMParser().parseFromString(html, 'text/html').body;
     }
     catch (e) {
         throw new Error(`Failed to fetch/parse HTML: ${e.message}`);
@@ -46,50 +43,45 @@ async function fetchFragment(fragment_path) {
 }
 
 // TODO: Improve variable names and readability
-async function createExerciseAnchor(exercise_title, statement_path, href, exercise_fragment, exercise_ul) {
+async function createExerciseAnchor(exercise_data, href, statement_path) {
+    const { exercise_title, exercise_ul, exercise_fragment } = exercise_data;
     const exercise_statement = await fetch(statement_path).then(res => res.text());
+
     // Create anchor tag around exercise
     const exercise_anchor = document.createElement('a');
     exercise_anchor.href = href;
 
-    exercise_fragment.body.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-    exercise_fragment.body.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+    exercise_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+    exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
 
-    // Append a clone of the static exercise_fragment (to not empty out source)
-    exercise_anchor.appendChild(exercise_fragment.body.firstElementChild.cloneNode(true));
-
+    exercise_anchor.appendChild(exercise_fragment);
     exercise_ul.appendChild(exercise_anchor);
-    return exercise_ul;
+    return exercise_anchor;
 }
 
 // TODO: These aren't prep funcs anymore, these are generate or create functions
 const prep_funcs = {
-    async home(prep_data) {
-        const { template_path } = prep_data;
-        const template_fragment = await fetchFragment(template_path)
-        return template_fragment;
+    async home() {
+        return fetchFragment('/templates/home.html');
     },
     // TODO: Swap to 404.html page in each catch block
     // TODO: Refactor
     async solution(prep_data) {
-        const { template_path, qual_path } = prep_data;
+        const { qual_path } = prep_data;
         const exercise_title = prep_data.title;
-        /* Fetch Stage */
-        // Fetch Solution Template (as new HTML document object)
-        // TODO: Remove this fetch call
-        const template_fragment = await fetchFragment(template_path);
 
-        // Fetch Exercise Statement
-        const statement_path = `${qual_path}/statement.html`;
-        const statement_html = await fetch(statement_path).then(res => res.text());
+        const template_fragment = cloneTemplate('solution');
 
-        // Fetch Solution
         const solution_path = `${qual_path}/solution.html`;
-        const solution_html = await fetch(solution_path).then(res => res.text()).catch(e => Error(e));
-
-        // Fetch hints.json
+        const statement_path = `${qual_path}/statement.html`;
         const hints_json_path = `${qual_path}/hints/hints.json`;
-        const hints_json = await fetch(hints_json_path).then(res => res.json()).catch(e => Error(e));
+
+        const paths = [solution_path, statement_path, hints_json_path];
+        const promises = paths.map(async path => {
+            return await fetch(path).then(res => path === hints_json_path ? res.json() : res.text());
+        });
+
+        const [solution_html, statement_html, hints_json] = await Promise.all(promises);
 
         // Fetch Hints
         const hints = [];
@@ -100,59 +92,60 @@ const prep_funcs = {
             hints.push(hint);
         }
 
-        /* Build Stage */
+        // Build statement
         template_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
         template_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = statement_html;
         template_fragment.getElementsByClassName('solution-container')[0].innerHTML = solution_html;
 
+        // Build hints
         if (hints) {
             const hint_container = template_fragment.getElementsByClassName('hint-container')[0];
             hint_container.classList.toggle('active');
 
             hints.forEach(hint => {
                 const hint_fragment = cloneTemplate('hint');
-                hint_fragment.appendChild(hint.body);
+                hint_fragment.appendChild(hint);
                 hint_container.appendChild(hint_fragment);
             });
         }
-
         return template_fragment;
     },
     async chapter(prep_data) {
-        const { template_path, qual_path } = prep_data;
+        const { qual_path } = prep_data;
         const chapter = Number(prep_data.qual_id);
 
-        const template_fragment = await fetchFragment(template_path);
-        const container = template_fragment.body.getElementsByClassName('chapter-container')[0];
-        const exercise_fragment = await fetchFragment('/templates/exercise-template.html');
+        const template_fragment = cloneTemplate('chapter');
 
-        container.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
+        template_fragment.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
 
         // Chapter 0 is the only chapter without sections; it runs once without any section data.
         const num_sections = chapter === 0 ? 1 : 3;
         for (let section = 0; section < num_sections; section++) {
+            // Set section content
             if (chapter !== 0) {
                 const section_header = document.createElement('h2');
                 section_header.className = 'section-title';
                 section_header.textContent = toc[chapter].sections[section + 1].title;
-                container.appendChild(section_header);
+                template_fragment.appendChild(section_header);
             }
 
             const exercise_ul = document.createElement('ul');
             exercise_ul.className = 'exercise-ul';
-            container.appendChild(exercise_ul);
+            template_fragment.appendChild(exercise_ul);
 
             const exercise_list = chapter === 0
                 ? toc[chapter].exercises
                 : toc[chapter].sections[section + 1].exercises;
 
+            // Build exercise list
             // TODO: Refactor each of these ternaries into their own functions
             const promises = exercise_list.map(exercise => {
+                const exercise_fragment = cloneTemplate('exercise');
                 const exercise_title = chapter == 0
                     ? `Exercise 0.${exercise}`
                     : `Exercise ${chapter}.${section + 1}.${exercise}`;
 
-                const exercise_statement_path = chapter == 0
+                const statement_path = chapter == 0
                     ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
                     : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
 
@@ -160,14 +153,15 @@ const prep_funcs = {
                     ? `/chapter-${chapter}/exercise-${exercise}`
                     : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
 
-                return createExerciseAnchor(exercise_title, exercise_statement_path, href, exercise_fragment, exercise_ul);
+                const exercise_data = { exercise_title, exercise_ul, exercise_fragment };
+                return createExerciseAnchor(exercise_data, href, statement_path);
             });
 
             await Promise.all(promises);
 
             // TODO: Add support for extra exercises and additoinal topics
         }
-        return template_fragment
+        return template_fragment;
     }
 }
 
@@ -287,7 +281,8 @@ async function locationHandler() {
     // Set Metadata of Page
     document.title = meta_data.title;
     document.querySelector('meta[name="description"]').setAttribute("content", meta_data.description);
-    document.getElementById('content').innerHTML = await template_fragment.then(res => res.body.innerHTML);
+    console.log(template_fragment);
+    document.getElementById('content').innerHTML = await template_fragment.then(res => res.outerHTML);
 
     // Render Injected MathJax
     renderMathJax(document.getElementById("content"));
