@@ -1,4 +1,6 @@
 import { toc } from '../data/toc_data.js';
+import { meta_data } from '../data/meta_data.js';
+import { validate } from './validation.js'
 
 // Debug flag
 const DEBUG = true;
@@ -56,6 +58,7 @@ async function createExerciseAnchor(exercise_data, href, statement_path) {
 
     exercise_anchor.appendChild(exercise_fragment);
     exercise_ul.appendChild(exercise_anchor);
+
     return exercise_anchor;
 }
 
@@ -64,9 +67,11 @@ const prep_funcs = {
     async home() {
         return fetchFragment('/home.html');
     },
+    async error() {
+        return fetchFragment('/404.html');
+    },
     // TODO: Swap to 404.html page in each catch block
-    // TODO: Refactor
-    async solution(prep_data) {
+    async exercise(prep_data) {
         const { qual_path } = prep_data;
         const exercise_title = prep_data.title;
 
@@ -114,15 +119,16 @@ const prep_funcs = {
     async chapter(prep_data) {
         const { qual_path } = prep_data;
         const chapter = Number(prep_data.qual_id);
+        const chapter_is_0 = chapter === 0;
 
         const template_fragment = cloneTemplate('chapter');
         template_fragment.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
 
         // Chapter 0 is the only chapter without sections; it runs once without any section data.
-        const num_sections = chapter === 0 ? 1 : 3;
+        const num_sections = chapter_is_0 ? 1 : 3;
         for (let section = 0; section < num_sections; section++) {
             // Set section content
-            if (chapter !== 0) {
+            if (!chapter_is_0) {
                 const section_header = document.createElement('h2');
                 section_header.className = 'section-title';
                 section_header.textContent = toc[chapter].sections[section + 1].title;
@@ -133,7 +139,7 @@ const prep_funcs = {
             exercise_ul.className = 'exercise-ul';
             template_fragment.appendChild(exercise_ul);
 
-            const exercise_list = chapter === 0
+            const exercise_list = chapter_is_0
                 ? toc[chapter].exercises
                 : toc[chapter].sections[section + 1].exercises;
 
@@ -141,15 +147,15 @@ const prep_funcs = {
             // TODO: Refactor each of these ternaries into their own functions
             const promises = exercise_list.map(exercise => {
                 const exercise_fragment = cloneTemplate('exercise');
-                const exercise_title = chapter == 0
+                const exercise_title = chapter_is_0
                     ? `Exercise 0.${exercise}`
                     : `Exercise ${chapter}.${section + 1}.${exercise}`;
 
-                const statement_path = chapter == 0
+                const statement_path = chapter_is_0
                     ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
                     : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
 
-                const href = chapter == 0
+                const href = chapter_is_0
                     ? `/chapter-${chapter}/exercise-${exercise}`
                     : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
 
@@ -176,10 +182,17 @@ async function locationHandler() {
     let location = window.location.pathname;
     if (DEBUG) console.log('location: ', location);
 
+    const is_location_valid = validate(location);
+    if (!is_location_valid) {
+        const { title, description } = meta_data.error();
+        document.title = title;
+        document.querySelector('meta[name="description"]').setAttribute('content', description);
+        document.getElementById('content').innerHTML = await prep_funcs.error().then(res => res.outerHTML);
+        return;
+    }
+
     // An example of a field-id pair is ['chapter', '0'] or ['exercise', '12'] or ['','']
-    const field_id_pairs = location.split('/')
-        .filter(string => string !== '')
-        .map(arr => arr.split('-'));
+    const field_id_pairs = location.split('/').filter(string => string !== '').map(arr => arr.split('-'));
     if (DEBUG) console.log('field_id_pairs:', field_id_pairs);
 
     // Qualified path in file tree corresponding to the specified location
@@ -192,95 +205,19 @@ async function locationHandler() {
 
     const qual_id = field_id_pairs.map(arr => arr[1]).join('.');
 
-    let title;
-    let template_fragment;
-
-    let meta_data = {
-        title: '',
-        description: '',
-        keywords: ''
-    }
-
-    let prep_data = {
-        qual_path: qual_path,
-        qual_id: qual_id,
-        title: ''
-    }
-
     // The last field determines how to get to that field in the file tree
-    const field = !field_id_pairs.length ? '' : field_id_pairs.at(-1)[0];
+    const field = !field_id_pairs.length ? 'home' : field_id_pairs.at(-1)[0];
     if (DEBUG) console.log('field: ', field);
 
-    // TODO: refactor this into a dictionary instead of a switch case
-    // each key is the current field name
-    // each value is a dictionary with the title, template_path, prep_func, and anything else
-    // Some how the below is useful?
-    // const routeConfig = routes[field] || { template: "/templates/404.html" };
-    // const fragment = await routeConfig.prep?.(prep_data) ?? await fetchFragment(routeConfig.template);
+    const { title, description, keywords } = meta_data[field](qual_id);
 
-    switch (field) {
-        case '':
-            title = 'Home';
+    let prep_func = prep_funcs[field];
+    let prep_data = { qual_path, qual_id, title };
 
-            prep_data.title = title;
-
-            meta_data = {
-                title: title,
-                description: 'Hatcher - Algebraic Topology Solutions: Home Page',
-                keywords: 'Hatcher, Algebraic Topology, Solutions, Solution'
-            }
-
-            template_fragment = prep_funcs.home(prep_data);
-            break;
-
-        case 'chapter':
-            if (!toc[qual_id]) {
-                template_fragment = fetchFragment('/404.html');
-                break
-            }
-            title = toc[qual_id].title;
-
-
-            prep_data.title = title;
-            meta_data = {
-                title: title,
-                keywords: ``,
-                description: `Hatcher - Algebraic Topology Chapter ${qual_id}`
-            }
-
-            template_fragment = prep_funcs.chapter(prep_data);
-            break;
-
-        case 'exercise':
-            title = `Exercise ${qual_id}`;
-            prep_data.title = title;
-
-            meta_data = {
-                title: title,
-                description: `Hatcher - Algebraic Topology Solutions: Exercise ${qual_id}`,
-                keywords: `Hatcher, Exercise ${qual_id}`
-            }
-
-            template_fragment = prep_funcs.solution(prep_data);
-            break;
-
-        case 'lemmas':
-            break;
-
-        case 'lemma':
-            break;
-
-        default:
-            console.log('ehrakjenr')
-            template_fragment = fetchFragment('/404.html');
-
-            break;
-    }
-
-    // Set Metadata of Page
-    document.title = meta_data.title;
-    document.querySelector('meta[name="description"]').setAttribute('content', meta_data.description);
-    document.getElementById('content').innerHTML = await template_fragment.then(res => res.outerHTML);
+    // Set Metadata
+    document.title = title;
+    document.querySelector('meta[name="description"]').setAttribute('content', description);
+    document.getElementById('content').innerHTML = await prep_func(prep_data).then(res => res.outerHTML);
 
     // Render Injected MathJax
     renderMathJax(document.getElementById('content'));
