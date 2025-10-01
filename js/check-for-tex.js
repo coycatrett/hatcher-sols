@@ -32,16 +32,16 @@ window.MathJax = {
   output: {
     displayOverflow: 'linebreak',  // break long lines
     linebreaks: {                  // options for when overflow is linebreak
-      inline: true,                   // true for browser-based breaking of in-line equations
-      width: '100%',                  // a fixed size or a percentage of the container width
-      lineleading: .2                // the default lineleading in em units
-      // LinebreakVisitor: null,         // The LinebreakVisitor to use
+      inline: true,                // true for browser-based breaking of in-line equations
+      width: '100%',               // a fixed size or a percentage of the container width
+      lineleading: .2              // the default lineleading in em units
+      // LinebreakVisitor: null,   // The LinebreakVisitor to use
     }
   }
 };
 
 
-// Load MathJax
+// Load MathJax v3
 // (function () {
 //   var script = document.createElement('script');
 //   // TODO Figure out the difference between these two links
@@ -51,6 +51,7 @@ window.MathJax = {
 //   document.head.appendChild(script);
 // })();
 
+// Load MathJax v4
 (function () {
   const script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js';

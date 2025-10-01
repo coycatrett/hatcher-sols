@@ -214,12 +214,6 @@ async function locationHandler() {
 }
 
 
-async function typesetPromise(elements = null) {
-    const doc = MathJax.startup.document;
-    doc.options.elements = elements;
-    doc.reset();
-    doc.render();
-}
 // /**
 //  * Required to re-render dynamically loaded MathJax
 //  * 
