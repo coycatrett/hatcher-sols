@@ -139,14 +139,16 @@ details.solution-details[open] summary::after {
 
 .img-container img {
     display: block;
+    align-self: center;
+    width: 100%;
     max-width: 100%;
     height: auto;
     border-radius: 8px;
 }
 
 iframe {
-    align-self: center;
     display: block;
+    align-self: center;
     width: 50%;
     max-width: 100%;
     aspect-ratio: 16/9;
