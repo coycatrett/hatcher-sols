@@ -4,6 +4,7 @@
     --fadedbabyblue: #89CFF040;
 }
 
+/* TODO: On mobile, link colors do not work. Fix this */
 p {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
