@@ -88,12 +88,14 @@ const gen_content = {
                     ? `/chapter-${chapter}/exercise-${exercise}`
                     : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
 
-                const exercise_data = { exercise_title, exercise_ul, exercise_fragment };
+                const exercise_data = { exercise_title, exercise_fragment };
                 return exerciseAnchor(exercise_data, href, statement_path);
             });
 
-            await Promise.all(promises);
-
+            const exerciseAnchors = await Promise.all(promises);
+            for (const exerciseAnchor of exerciseAnchors) {
+                exercise_ul.appendChild(exerciseAnchor);
+            }
             // TODO: Add support for extra exercises and additoinal topics
         }
         return template_fragment;
@@ -148,7 +150,7 @@ const gen_content = {
 
 // Helper function to gen_funcs[chapter] to create clickable list elements
 async function exerciseAnchor(exercise_data, href, statement_path) {
-    const { exercise_title, exercise_ul, exercise_fragment } = exercise_data;
+    const { exercise_title, exercise_fragment } = exercise_data;
     const exercise_statement = await fetch(statement_path).then(res => res.text());
 
     // Create anchor tag around exercise
@@ -159,7 +161,6 @@ async function exerciseAnchor(exercise_data, href, statement_path) {
     exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
 
     exercise_anchor.appendChild(exercise_fragment);
-    exercise_ul.appendChild(exercise_anchor);
 
     return exercise_anchor;
 }
