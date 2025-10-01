@@ -14,7 +14,8 @@ const routes = [
             const exercises = section
                 ? toc[chapter].sections[section].exercises
                 : toc[chapter].exercises;
-            return exercises.includes(Number(exercise));
+
+            return exercises && exercises.includes(Number(exercise));
         }
     }
 ];
