@@ -56,13 +56,6 @@ p {
 }
 
 
-.quiver-embed {
-    align-self: center;
-    display: block;
-    max-width: 80%;
-    height: auto;
-}
-
 .hint-container {
     display: none;
 }
@@ -146,7 +139,17 @@ details.solution-details[open] summary::after {
 
 .img-container img {
     display: block;
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
+    border-radius: 8px;
+}
+
+iframe {
+    align-self: center;
+    display: block;
+    width: 50%;
+    max-width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
     border-radius: 8px;
 }
