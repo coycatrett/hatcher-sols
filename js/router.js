@@ -26,7 +26,7 @@ function cloneTemplate(name) {
  * @param {String} fragment_path - Location of fragment
  * @returns {HTMLBodyElement} - The body of the document object
  */
-export async function fetchFragment(fragment_path) {
+async function fetchFragment(fragment_path) {
     try {
         const res = await fetch(fragment_path);
         const html = await res.text();
@@ -151,14 +151,14 @@ const gen_content = {
 // Helper function to gen_funcs[chapter] to create clickable list elements
 async function exerciseAnchor(exercise_data, href, statement_path) {
     const { exercise_title, exercise_fragment } = exercise_data;
-    const exercise_statement = await fetch(statement_path).then(res => res.text());
+    const exercise_statement = await fetchFragment(statement_path);// await fetch(statement_path).then(res => res.text());
 
     // Create anchor tag around exercise
     const exercise_anchor = document.createElement('a');
     exercise_anchor.href = href;
 
     exercise_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-    exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+    exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement.outerHTML;
 
     exercise_anchor.appendChild(exercise_fragment);
 
