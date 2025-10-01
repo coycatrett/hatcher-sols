@@ -214,15 +214,22 @@ async function locationHandler() {
 }
 
 
-/**
- * Required to re-render dynamically loaded MathJax
- * 
- * See [MathJax.typesetPromise documentation](https://docs.mathjax.org/en/latest/web/typeset.html)
- * @param {HTMLElement} [container] - The HTMLElement containing the MathJax to be re-rendered
- */
+async function typesetPromise(elements = null) {
+    const doc = MathJax.startup.document;
+    doc.options.elements = elements;
+    doc.reset();
+    doc.render();
+}
+// /**
+//  * Required to re-render dynamically loaded MathJax
+//  * 
+//  * See [MathJax.typesetPromise documentation](https://docs.mathjax.org/en/latest/web/typeset.html)
+//  * @param {HTMLElement} [container] - The HTMLElement containing the MathJax to be re-rendered
+//  */
 function renderMathJax(container = document.body) {
     if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', err));
+        // MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', err));
+        MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', console.error(err)));
     }
     else {
         // TODO: Could this get caught in an infinite loop?
