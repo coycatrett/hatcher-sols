@@ -33,6 +33,7 @@ Briefly, here are the major concepts that I learned from this project:
 - CSS animations and styling techniques
 - How to implement design patterns for scalability and extensibility
 - Git version control
+- Vercel hosting & deployment
 
 # What I Would Do Differently
 
