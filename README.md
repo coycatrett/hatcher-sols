@@ -36,7 +36,7 @@ Briefly, here are the major concepts that I learned from this project:
 
 # What I Would Do Differently
 
-A lot of what I did felt like it could be made more efficient with Vue. Additionally, I should have looked for more examples of similar sites, like [$\pi$-base](https://topology.pi-base.org/) ([GitHub Profile)](https://github.com/pi-base)), and mimicked how they set up their site. I initially approached this a bit blind, which led to some complications down the road and eventually an entire redesign. This could have been avoided at the start, but I think that failing fast and moving forward here was the right move; I enjoyed this experience and felt like I taught myself quite a bit.
+A lot of what I did felt like it could be made more efficient with Vue. Additionally, I should have looked for more examples of similar sites, like [$\pi$-base](https://topology.pi-base.org/) ([GitHub Profile](https://github.com/pi-base)), and mimicked how they set up their site. I initially approached this a bit blind, which led to some complications down the road and eventually an entire redesign. This could have been avoided at the start, but I think that failing fast and moving forward here was the right move; I enjoyed this experience and felt like I taught myself quite a bit.
 
 I am also open to suggestions and improvements to this project. Feel free to reach out to me at <ctcatrett@gmail.com>.
 
