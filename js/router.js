@@ -2,9 +2,7 @@ import { toc } from '../data/toc_data.js';
 import { meta_data } from '../data/meta_data.js';
 import { validate } from './validation.js'
 
-// Debug flag
-const DEBUG = true;
-
+// Static copies of content templates
 const templates = {
     chapter: document.getElementById('chapter-template'),
     exercise: document.getElementById('exercise-template'),
@@ -12,27 +10,22 @@ const templates = {
     solution: document.getElementById('solution-template')
 }
 
+
+/**
+ * Clones a content template
+ * @param {String} name - Name of the template
+ * @returns {HTMLElement} - Clone of template[name]'s first child
+ */
 function cloneTemplate(name) {
     return templates[name].content.firstElementChild.cloneNode(true);
 }
 
-/**
- * Required to re-render dynamically loaded MathJax
- * 
- * See [MathJax.typesetPromise documentation](https://docs.mathjax.org/en/latest/web/typeset.html)
- * @param {HTMLElement} [container] - The HTMLElement containing the MathJax to be re-rendered
- */
-function renderMathJax(container = document.body) {
-    if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', err));
-    }
-    else {
-        // TODO: Could this get caught in an infinite loop?
-        console.log('MathJax not ready, retrying...');
-        setTimeout(() => renderMathJax(container), 100);
-    }
-}
 
+/**
+ * Fetches html fragment located at `fragment_path`
+ * @param {String} fragment_path - Location of fragment
+ * @returns {HTMLBodyElement} - The body of the document object
+ */
 export async function fetchFragment(fragment_path) {
     try {
         const res = await fetch(fragment_path);
@@ -44,36 +37,70 @@ export async function fetchFragment(fragment_path) {
     }
 }
 
-// TODO: Improve variable names and readability
-async function createExerciseAnchor(exercise_data, href, statement_path) {
-    const { exercise_title, exercise_ul, exercise_fragment } = exercise_data;
-    const exercise_statement = await fetch(statement_path).then(res => res.text());
 
-    // Create anchor tag around exercise
-    const exercise_anchor = document.createElement('a');
-    exercise_anchor.href = href;
-
-    exercise_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
-    exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
-
-    exercise_anchor.appendChild(exercise_fragment);
-    exercise_ul.appendChild(exercise_anchor);
-
-    return exercise_anchor;
-}
-
-// TODO: These aren't prep funcs anymore, these are generate or create functions
-const prep_funcs = {
+// Collection of async functions which generate content
+const gen_content = {
     async home() {
         return fetchFragment('/home.html');
     },
     async error() {
         return fetchFragment('/404.html');
     },
-    // TODO: Swap to 404.html page in each catch block
-    async exercise(prep_data) {
-        const { qual_path } = prep_data;
-        const exercise_title = prep_data.title;
+    async chapter(content_data) {
+        const { qual_path } = content_data;
+        const chapter = Number(content_data.qual_id);
+        const chapter_is_0 = chapter === 0;
+
+        const template_fragment = cloneTemplate('chapter');
+        template_fragment.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
+
+        // Chapter 0 is the only chapter without sections; it runs once without any section data.
+        const num_sections = chapter_is_0 ? 1 : 3;
+        for (let section = 0; section < num_sections; section++) {
+            // Set section content
+            if (!chapter_is_0) {
+                const section_header = document.createElement('h2');
+                section_header.className = 'section-title';
+                section_header.textContent = toc[chapter].sections[section + 1].title;
+                template_fragment.appendChild(section_header);
+            }
+
+            const exercise_ul = document.createElement('ul');
+            exercise_ul.className = 'exercise-ul';
+            template_fragment.appendChild(exercise_ul);
+
+            const exercise_list = chapter_is_0
+                ? toc[chapter].exercises
+                : toc[chapter].sections[section + 1].exercises;
+
+            // Build exercise list
+            const promises = exercise_list.map(exercise => {
+                const exercise_fragment = cloneTemplate('exercise');
+                const exercise_title = chapter_is_0
+                    ? `Exercise 0.${exercise}`
+                    : `Exercise ${chapter}.${section + 1}.${exercise}`;
+
+                const statement_path = chapter_is_0
+                    ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
+                    : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
+
+                const href = chapter_is_0
+                    ? `/chapter-${chapter}/exercise-${exercise}`
+                    : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
+
+                const exercise_data = { exercise_title, exercise_ul, exercise_fragment };
+                return exerciseAnchor(exercise_data, href, statement_path);
+            });
+
+            await Promise.all(promises);
+
+            // TODO: Add support for extra exercises and additoinal topics
+        }
+        return template_fragment;
+    },
+    async exercise(content_data) {
+        const { qual_path } = content_data;
+        const exercise_title = content_data.title;
 
         const template_fragment = cloneTemplate('solution');
 
@@ -115,60 +142,26 @@ const prep_funcs = {
         }
 
         return template_fragment;
-    },
-    async chapter(prep_data) {
-        const { qual_path } = prep_data;
-        const chapter = Number(prep_data.qual_id);
-        const chapter_is_0 = chapter === 0;
-
-        const template_fragment = cloneTemplate('chapter');
-        template_fragment.getElementsByClassName('chapter-title')[0].textContent = toc[chapter].title;
-
-        // Chapter 0 is the only chapter without sections; it runs once without any section data.
-        const num_sections = chapter_is_0 ? 1 : 3;
-        for (let section = 0; section < num_sections; section++) {
-            // Set section content
-            if (!chapter_is_0) {
-                const section_header = document.createElement('h2');
-                section_header.className = 'section-title';
-                section_header.textContent = toc[chapter].sections[section + 1].title;
-                template_fragment.appendChild(section_header);
-            }
-
-            const exercise_ul = document.createElement('ul');
-            exercise_ul.className = 'exercise-ul';
-            template_fragment.appendChild(exercise_ul);
-
-            const exercise_list = chapter_is_0
-                ? toc[chapter].exercises
-                : toc[chapter].sections[section + 1].exercises;
-
-            // Build exercise list
-            // TODO: Refactor each of these ternaries into their own functions
-            const promises = exercise_list.map(exercise => {
-                const exercise_fragment = cloneTemplate('exercise');
-                const exercise_title = chapter_is_0
-                    ? `Exercise 0.${exercise}`
-                    : `Exercise ${chapter}.${section + 1}.${exercise}`;
-
-                const statement_path = chapter_is_0
-                    ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
-                    : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
-
-                const href = chapter_is_0
-                    ? `/chapter-${chapter}/exercise-${exercise}`
-                    : `/chapter-${chapter}/section-${section + 1}/exercise-${exercise}`;
-
-                const exercise_data = { exercise_title, exercise_ul, exercise_fragment };
-                return createExerciseAnchor(exercise_data, href, statement_path);
-            });
-
-            await Promise.all(promises);
-
-            // TODO: Add support for extra exercises and additoinal topics
-        }
-        return template_fragment;
     }
+}
+
+
+// Helper function to gen_funcs[chapter] to create clickable list elements
+async function exerciseAnchor(exercise_data, href, statement_path) {
+    const { exercise_title, exercise_ul, exercise_fragment } = exercise_data;
+    const exercise_statement = await fetch(statement_path).then(res => res.text());
+
+    // Create anchor tag around exercise
+    const exercise_anchor = document.createElement('a');
+    exercise_anchor.href = href;
+
+    exercise_fragment.getElementsByClassName('exercise-title')[0].innerHTML = exercise_title;
+    exercise_fragment.getElementsByClassName('exercise-statement')[0].innerHTML = exercise_statement;
+
+    exercise_anchor.appendChild(exercise_fragment);
+    exercise_ul.appendChild(exercise_anchor);
+
+    return exercise_anchor;
 }
 
 
@@ -180,20 +173,18 @@ const prep_funcs = {
  */
 async function locationHandler() {
     let location = window.location.pathname;
-    if (DEBUG) console.log('location: ', location);
 
     const is_location_valid = validate(location);
     if (!is_location_valid) {
         const { title, description } = meta_data.error();
         document.title = title;
         document.querySelector('meta[name="description"]').setAttribute('content', description);
-        document.getElementById('content').innerHTML = await prep_funcs.error().then(res => res.outerHTML);
+        document.getElementById('content').innerHTML = await gen_content.error().then(res => res.outerHTML);
         return;
     }
 
     // An example of a field-id pair is ['chapter', '0'] or ['exercise', '12'] or ['','']
     const field_id_pairs = location.split('/').filter(string => string !== '').map(arr => arr.split('-'));
-    if (DEBUG) console.log('field_id_pairs:', field_id_pairs);
 
     // Qualified path in file tree corresponding to the specified location
     let qual_path =
@@ -201,26 +192,42 @@ async function locationHandler() {
             const [field, id] = field_id_pair;
             return partial_qual_path + `/${field}s/${field}-${id}`
         }, '/content');
-    if (DEBUG) console.log('qual_path: ', qual_path);
 
     const qual_id = field_id_pairs.map(arr => arr[1]).join('.');
 
     // The last field determines how to get to that field in the file tree
     const field = !field_id_pairs.length ? 'home' : field_id_pairs.at(-1)[0];
-    if (DEBUG) console.log('field: ', field);
 
     const { title, description, keywords } = meta_data[field](qual_id);
 
-    let prep_func = prep_funcs[field];
-    let prep_data = { qual_path, qual_id, title };
+    let gen_func = gen_content[field];
+    let content_data = { qual_path, qual_id, title };
 
     // Set Metadata
     document.title = title;
     document.querySelector('meta[name="description"]').setAttribute('content', description);
-    document.getElementById('content').innerHTML = await prep_func(prep_data).then(res => res.outerHTML);
+    document.getElementById('content').innerHTML = await gen_func(content_data).then(res => res.outerHTML);
 
     // Render Injected MathJax
     renderMathJax(document.getElementById('content'));
+}
+
+
+/**
+ * Required to re-render dynamically loaded MathJax
+ * 
+ * See [MathJax.typesetPromise documentation](https://docs.mathjax.org/en/latest/web/typeset.html)
+ * @param {HTMLElement} [container] - The HTMLElement containing the MathJax to be re-rendered
+ */
+function renderMathJax(container = document.body) {
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([container]).catch(err => console.error('MathJax render error:', err));
+    }
+    else {
+        // TODO: Could this get caught in an infinite loop?
+        console.log('MathJax not ready, retrying...');
+        setTimeout(() => renderMathJax(container), 100);
+    }
 }
 
 
