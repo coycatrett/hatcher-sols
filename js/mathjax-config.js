@@ -18,7 +18,12 @@ window.MathJax = {
   },
   svg: {
     fontCache: 'global',
-    linebreaks: { automatic: true, width: 'container' }
+    linebreaks: {
+      inline: true,
+      width: '100%',
+      lineleading: .2,
+      LinebreakVisitor: null
+    }
   }
 };
 
