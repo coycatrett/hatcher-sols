@@ -138,11 +138,12 @@ details.solution-details[open] summary::after {
 
 .img-container {
     align-self: center;
-    width: inherit;
-    scale: 90%;
 }
 
 
 .img-container img {
+    display: block;
+    max-width: 90%;
+    height: auto;
     border-radius: 8px;
 }
