@@ -18,6 +18,7 @@ window.MathJax = {
   },
   output: {
     fontCache: 'global',
+    displayOverflow: 'linebreak',
     linebreaks: {
       inline: true,
       width: '100%',
