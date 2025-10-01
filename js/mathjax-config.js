@@ -16,7 +16,7 @@ window.MathJax = {
       hideHorizontalLabels: true
     }
   },
-  svg: {
+  output: {
     fontCache: 'global',
     linebreaks: {
       inline: true,
