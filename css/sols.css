@@ -138,6 +138,7 @@ details.solution-details[open] summary::after {
 
 .img-container {
     align-self: center;
+    width: inherit;
     scale: 90%;
 }
 
