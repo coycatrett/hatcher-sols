@@ -1,12 +1,28 @@
 <p>
-    Denote the torus by $\mathbb{T}$, defined as the quotient $[-1,1]^{2} /\big((-1,t) \sim (1,t) \text{ and
-    } (t,-1) \sim (t,1) \forall t \in [-1,1]\big)$
-    with quotient map $\rho : [-1,1]^{2} \to \mathbb{T}$. With this representation, the longitude and
-    meridian circles of the torus that we choose here
-    are the images of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$, in no particular order, under
-    $\rho$.
-    These circles intersect once at the image of the corners of $[-1,1]^{2}$ and correspond to the opposite
-    pairs of edges in $\partial [-1,1]^{2}$.
+    We may remove any point of our choosing from the torus. Thinking of the torus $\mathbb{T}$ as $\mathbb{S}^1 \times
+    \mathbb{S}^1$, let $p_0 = (z_0,w_0) \in \mathbb{T}$.
+    If $\widetilde{H} : (\mathbb{T} - p_0) \times I \to \mathbb{T} - p_0$ is a deformation retraction
+    of $\mathbb{T} - p_0$ onto the union of a longitudinal circle (of the form $\mathbb{S}^1 \times \{z'\}$, around the
+    $\textit{long}$ way) and a meridional circle (of the form $\{w'\} \times \mathbb{S}^1$), and $p_1 = (z_1, w_1)$ is
+    any other point of $\mathbb{T} - p_0$, let $h :\mathbb{T} \to \mathbb{T}$ be the homeomorphism taking $p_1$ to $p_0$
+    defined by $h(z,w) = (z_0z_1^{-1}z, w_0w_1^{-1}w)$.
+    The composite $h^{-1} \circ \widetilde{H} \circ (h \times \text{id}_I) : (\mathbb{T} - p_1)\times I \to \mathbb{T} -
+    p_1$ is a deformation retraction of $\mathbb{T} - p_1$ to the union of a longitudinal circle $\mathbb{S}^1 \times
+    \{w_0w_1^{-1}w'\}$ and meridional circle $ \{z_0z_1^{-1}z'\} \times \mathbb{S}^1$.
+</p>
+
+<p>
+    Now thinking of $\mathbb{T}$ as the quotient
+    $$[-1,1]^{2} /\big((-1,t) \sim (1,t) \text{ and } (t,-1) \sim (t,1) \forall t \in [-1,1]\big)$$
+    with quotient map $\rho : [-1,1]^2 \to \mathbb{T}$, let $p_0 = \rho(0)$ be the point that we remove from
+    $\mathbb{T}$.
+</p>
+
+<p>
+    With this representation of the torus, the longitude and meridian circles of the torus that we will retract to are
+    the images of of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$ under $\rho$.
+    These circles correspond to opposite pairs of edges in the boundary square $\partial [-1,1]^{2}$ and they intersect
+    once at the image of the four corners of $[-1,1]^{2}$ under $\rho$.
 </p>
 
 <p>
@@ -21,23 +37,22 @@
 <p>
     The map $r : [-1,1]^{2} - 0 \to \partial [-1,1]^{2}$ above is the radial projection from the origin onto
     $\partial [-1,1]^{2}$ and has explicit formula given by
-    $r(x) = \frac{x}{\,\,\lVert x \rVert_{\infty}}$, where $\lVert \, \cdot \, \rVert_{\infty}$ is the <a
+    $$r(x) = \frac{x}{\,\,\lVert x \rVert_{\infty}},$$
+    where $\lVert \, \cdot \, \rVert_{\infty}$ is the
+    <a
         href="https://en.wikipedia.org/wiki/Norm_(mathematics)#Maximum_norm_(special_case_of:_infinity_norm,_uniform_norm,_or_supremum_norm)">$\infty$-norm</a>.
 </p>
 
 <p>
-    The significance of the $\infty$-norm above is that $\mathbb{D}^{2}_{\infty} = [-1,1]^{2}$ and
-    $\mathbb{S}^{1}_{\infty} = \partial[-1,1]^{2}$,
-    so this is simply an instance of the radial projection from the origin to the unit circle in a normed
-    vector space.
-</p>
-
-<p>
-    For the reasons above, we will refer to $[-1,1]^{2}$ as $\mathbb{D}^{2}$ and $\partial [-1,1]^{2}$ as
+    The significance of the $\infty$-norm above is that unit disk $\mathbb{D}^{2}_{\infty}$ in $\mathbb{R}^2$ with the
+    $\infty$-norm is precisely $[-1,1]^{2}$, and the unit circle $\mathbb{S}^{1}_{\infty}$ in $\mathbb{R}^2$ with the
+    $\infty$-norm is precisely $\partial[-1,1]^{2}$.
+    Therefore, the above is simply an instance of the radial projection from the origin to the unit circle in a normed
+    vector space. For these reasons, we will refer to $[-1,1]^{2}$ as $\mathbb{D}^{2}$ and $\partial [-1,1]^{2}$ as
     $\mathbb{S}^{1}$ for the remainder of the solution.
 </p>
 
-<p>
+<!-- <p>
     We define a homotopy $H : (\mathbb{D}^{2} - 0) \times I \to \mathbb{D}^{2} - 0$ from the
     identity on $\mathbb{D}^{2} - 0$ to $\iota r$ (where $\iota$ is the inclusion $\mathbb{S}^{1}
     \hookrightarrow \mathbb{D}^{2} - 0$) by having each point follow the ray it determines to its point of
@@ -46,17 +61,23 @@
     $\widetilde{H} : (\mathbb{T} - 0) \times I \to \mathbb{T} - 0$ onto the longitude and meridian circles
     of
     $\mathbb{T}$ that we have chosen, i.e., the image of $\mathbb{S}^{1}$ under $\rho$.
+</p> -->
+
+<p>
+    Let $\iota : \mathbb{S}^1 \hookrightarrow \mathbb{D}^2 - 0$ be the standard inclusion. Using our previously defined
+    notation, notice that $r : \mathbb{D}^2 - 0 \to \mathbb{S}^1$ satisfies $r \iota = \text{id}_{\mathbb{S}^1}$, and so
+    $r$ is a retraction of $\mathbb{D}^2 - 0$ onto $\mathbb{S}^1$.
 </p>
 
 <p>
-    To that end, define $H$ by
+    Define the linear homotopy $H :(\mathbb{D}^{2} - 0) \times I \to \mathbb{D}^{2} - 0$ by
     $$H(-,t) = (1 - t)\text{id}_{\mathbb{D}^{2} - 0} + t\,\iota r.$$
     Since $H(x,-)$ parametrizes the line segment from $x$ to $r(x)$ for each $x$ (and is therefore never
     $0$), $H$ is well-defined. $H$ may be written as a composition of continuous functions, and is therefore
     continuous.
-<p>
-    One can now verify that
 </p>
+
+<p>One can now verify that</p>
 
 <ul style="margin: 0; padding-top: 0;">
     <li>
@@ -71,20 +92,20 @@
 </ul>
 
 <p>
-    and so $H$ is a deformation retraction onto $\mathbb{S}^{1}$.
+    and so $H$ is a deformation retraction of $\mathbb{D}^2 - 0$ onto $\mathbb{S}^{1}$.
 </p>
 
 <p>
-    Let $p_{0} = \rho(0)$ and $\rho_{0} : \mathbb{D}^{2} - 0 \to \mathbb{T} - p_{0}$ be the restriction of
-    $\rho$ to $\mathbb{D}^{2} - 0$.
-    Notice that $\rho_{0} \circ H$ is constant on the fibers of the quotient map $\rho_{0} \times
-    \text{id}_{I} : (\mathbb{D}^{2} - 0) \times I \to (\mathbb{T} - p_{0}) \times I$,
-    and so $\rho_{0} \circ H$ descends to the quotient to a homotopy $\widetilde{H} : (\mathbb{T} - p_{0})
-    \times I \to \mathbb{T} - p_{0}$.
+    Recall that $p_{0} = \rho(0)$ is the point we are removing from $\mathbb{T}$. Let $\rho_{0} : \mathbb{D}^{2} - 0 \to
+    \mathbb{T} - p_{0}$ be the restriction of $\rho$ to $\mathbb{D}^{2} - 0$. Since $I$ and $\mathbb{T}$ are
+    locally compact spaces, then $\rho_0 \times \text{id}_{I} : (\mathbb{D}^2 - 0) \times I \to (\mathbb{T} - p_0)
+    \times I$ is a quotient map (see <a href="https://math.stackexchange.com/a/31700/803927">this MSE post</a> for why
+    this is important).
 </p>
 
-<p>
-    The above can be summarized be the following commutative diagram:
+<p>Notice that $\rho_0 \circ H$ is constant on the fibers of $\rho_0 \times
+    \text{id}_{I}$, and therefore descends to a map $\widetilde{H} : (\mathbb{T} - p_0) \times I \to \mathbb{T} - p_0$
+    by the universal property of the quotient space. In otherwords, the following square commutes:
 </p>
 
 <!-- https://q.uiver.app/#q=WzAsNCxbMCwwLCIoXFxtYXRoYmJ7RH1eMiAtIDApIFxcdGltZXMgSSAiXSxbMSwwLCJcXG1hdGhiYntEfV4yIC0gMCJdLFswLDEsIihcXG1hdGhiYntUfSAtIHBfMCkgXFx0aW1lcyBJIl0sWzEsMSwiXFxtYXRoYmJ7VH0gLSBwXzAiXSxbMCwxLCJIIl0sWzAsMiwiXFxyaG9fezB9IFxcdGltZXMgXFx0ZXh0e2lkfV97SX0iLDJdLFsyLDMsIlxcd2lkZXRpbGRle0h9IiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV0sWzEsMywiXFxyaG9fMCJdXQ== -->
@@ -113,13 +134,10 @@
 </p>
 
 <p>
-    One can then compute that $\widetilde{H}$ has explicit formula
+    One can then show that $\widetilde{H}$ has explicit formula
     $$\widetilde{H}(\rho_{0}(x), t) = \rho_{0} \left((1-t)x + t\frac{x}{\,\,\lVert x
     \rVert_{\infty}}\right).$$
 
     Obtaining formulae for various representations of $\mathbb{T}$ from this one is easier now,
     as we need only pass through a homeomorphism.
 </p>
-<!-- </div>
-</details> -->
-<!-- </div> -->
