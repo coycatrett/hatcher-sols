@@ -17,7 +17,7 @@ document.getElementById("nav-menu").addEventListener("click", e => e.stopPropaga
 
 
 // Prevent clicks on the toggle button from bubbling up
-document.getElementById("nav-menu-btn").addEventListener("click", e => e.stopPropagation());
+document.getElementById("nav-btn").addEventListener("click", e => e.stopPropagation());
 
 
 // Clicking anywhere else closes the menu

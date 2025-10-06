@@ -2,18 +2,25 @@
 
 ## Overview
 
-This is a webpage documenting of my solutions to the exercises in Allen Hatcher's Algebraic Topology.
+Welcom! This is a website documenting my soltutions to the exercises in
+*Allen Hatcher's Algebraic Topology*.
+
+The author has included useful information about the book [on their website](https://pi.math.cornell.edu/~hatcher/AT/ATpage.html). Allen Hatcher's personal site can be found
+[here](https://pi.math.cornell.edu/~hatcher/#ATI).
 
 The purpose of this website is two-fold:
 
-1. I want to improve my web-development skills.
-2. I love math, especially algebraic topology, and I love helping others with their math.
+1. To improve my web-development skills and gain a deeper understanding of JavaScript and client-side routing.
+2. To help others studying algebraic topology and to document my solutions. I love math, especially algebraic topology, and I love helping others with math.
 
-I hope that this website is a valuable resource for students/studiers of algebraic topology.
+I hope that this website serves some as a complementary reference for students/studiers of algebraic topology using Hatcher's book.
+
+This book has a reputation for being a somewhat difficult introduction to algebraic topology.
+To that end, each exercise has hints that aim to help solve a particular exercise.
 
 ## Implementation
 
-Currently, this webpage is designed as a single page application (SPA) with custom client-side routing implemented in Vanilla JavaScript with the History API.
+This webpage is designed as a single page application (SPA) with custom client-side routing implemented in vanilla JavaScript with the History API.
 
 There are several families of valid routes (see `validation.js`), and after validating them, I interrupt the default routing behavior and let my router take over instead, using the History API.
 
@@ -37,7 +44,7 @@ Briefly, here are the major concepts that I learned from this project:
 
 ## What I Would Do Differently
 
-A lot of what I did felt like it could be made more efficient with Vue. Additionally, I should have looked for more examples of similar sites, like [$\pi$-base](https://topology.pi-base.org/) ([GitHub Profile](https://github.com/pi-base)), and mimicked how they set up their site. I initially approached this a bit blind, which led to some complications down the road and eventually an entire redesign. This could have been avoided at the start, but I think that failing fast and moving forward here was the right move; I enjoyed this experience and felt like I taught myself quite a bit.
+A lot of what I did felt like it could be made more efficient with Vue. Additionally, I should have looked for more examples of similar sites, like [𝛑-base](https://topology.pi-base.org/) ([GitHub Profile](https://github.com/pi-base)), and mimicked how they set up their site. I initially approached this a bit blind, which led to some complications down the road and eventually an entire redesign. This could have been avoided at the start, but I think that failing fast and moving forward here was the right move; I enjoyed this experience and felt like I taught myself quite a bit.
 
 I am also open to suggestions and improvements to this project. Feel free to reach out to me at <ctcatrett@gmail.com>.
 

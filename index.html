@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/sols.css">
     <link rel="stylesheet" href="/css/chapter.css">
+    <link rel="stylesheet" href="/css/home.css">
 
     <!-- Scripts -->
 
@@ -51,12 +52,21 @@
     </header>
 
     <div id="btn-container">
-        <button id="nav-menu-btn" onclick="toggleNavMenu()">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
+        <div id="nav-btn-container">
+            <button id="nav-btn" onclick="toggleNavMenu()">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+
+        <div id="git-dm-btn-container">
+            <a href="https://github.com/coycatrett/hatcher-sols" id="github-link" target="_blank" rel="noopener">
+                <img src="/static/github-mark.svg" alt="GitHub" id="github-img">
+            </a>
+        </div>
     </div>
+
 
     <nav id="nav-menu" class="nav-menu">
         <ul class="mm-listview">

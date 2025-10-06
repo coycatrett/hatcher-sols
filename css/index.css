@@ -15,6 +15,7 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     padding-bottom: 5em;
+
 }
 
 
@@ -81,10 +82,15 @@ header {
     padding: 0;
 }
 
-
 #btn-container {
-    margin-left: 0.15em;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#nav-btn-container {
+    margin-left: 0.15em;
+    display: block;
     flex-direction: row;
     justify-content: flex-start;
     column-gap: 0.25em;
@@ -109,7 +115,7 @@ header {
 }
 
 
-#nav-menu-btn {
+#nav-btn {
     display: flex;
     justify-content: space-around;
     flex-direction: column;
@@ -130,6 +136,22 @@ header {
     /* vertical spacing between lines */
 }
 
+#git-dm-btn-container {
+    position: relative;
+    float: inline-end;
+}
+
+#github-link {
+    width: fit-content;
+    height: fit-content;
+}
+
+#github-img {
+    padding-right: 10px;
+    height: 32px;
+    width: 32px;
+    display: block;
+}
 
 .mm-listview {
     display: flex;
