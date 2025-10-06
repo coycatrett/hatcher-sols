@@ -2,11 +2,10 @@
 
 ## Overview
 
-Welcom! This is a website documenting my soltutions to the exercises in
+Welcome! This is a website documenting my solutions to the exercises in
 *Allen Hatcher's Algebraic Topology*.
 
-The author has included useful information about the book [on their website](https://pi.math.cornell.edu/~hatcher/AT/ATpage.html). Allen Hatcher's personal site can be found
-[here](https://pi.math.cornell.edu/~hatcher/#ATI).
+The author has included useful information about the book [on the book's download page](https://pi.math.cornell.edu/~hatcher/AT/ATpage.html). See Allen Hatcher's [personal site](https://pi.math.cornell.edu/~hatcher/#ATI) for more about his work.
 
 The purpose of this website is two-fold:
 
@@ -14,9 +13,6 @@ The purpose of this website is two-fold:
 2. To help others studying algebraic topology and to document my solutions. I love math, especially algebraic topology, and I love helping others with math.
 
 I hope that this website serves some as a complementary reference for students/studiers of algebraic topology using Hatcher's book.
-
-This book has a reputation for being a somewhat difficult introduction to algebraic topology.
-To that end, each exercise has hints that aim to help solve a particular exercise.
 
 ## Implementation
 

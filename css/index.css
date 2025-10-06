@@ -15,7 +15,6 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     padding-bottom: 5em;
-
 }
 
 
@@ -189,7 +188,11 @@ header {
 
 
 #content {
-    position: relative;
+    /* TODO: Make this appear only on the home page... */
+    /* display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative; */
     padding: 5px 25px 5px 25px;
     width: 1200px;
     max-width: 90%;
