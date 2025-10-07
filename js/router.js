@@ -151,7 +151,7 @@ const gen_content = {
 // Helper function to gen_funcs[chapter] to create clickable list elements
 async function exerciseAnchor(exercise_data, href, statement_path) {
     const { exercise_title, exercise_fragment } = exercise_data;
-    const exercise_statement = await fetchFragment(statement_path);// await fetch(statement_path).then(res => res.text());
+    const exercise_statement = await fetchFragment(statement_path);
 
     // Create anchor tag around exercise
     const exercise_anchor = document.createElement('a');

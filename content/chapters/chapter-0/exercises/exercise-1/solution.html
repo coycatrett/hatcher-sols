@@ -1,26 +1,30 @@
 <p>
     We may remove any point of our choosing from the torus. Thinking of the torus $\mathbb{T}$ as $\mathbb{S}^1 \times
     \mathbb{S}^1$, let $p_0 = (z_0,w_0) \in \mathbb{T}$.
-    If $\widetilde{H} : (\mathbb{T} - p_0) \times I \to \mathbb{T} - p_0$ is a deformation retraction
-    of $\mathbb{T} - p_0$ onto the union of a longitudinal circle (of the form $\mathbb{S}^1 \times \{z'\}$, around the
-    $\textit{long}$ way) and a meridional circle (of the form $\{w'\} \times \mathbb{S}^1$), and $p_1 = (z_1, w_1)$ is
-    any other point of $\mathbb{T} - p_0$, let $h :\mathbb{T} \to \mathbb{T}$ be the homeomorphism taking $p_1$ to $p_0$
-    defined by $h(z,w) = (z_0z_1^{-1}z, w_0w_1^{-1}w)$.
+
+    If $\widetilde{H} : (\mathbb{T} - p_0) \times I \to \mathbb{T}
+    - p_0$ is a deformation retraction of $\mathbb{T} - p_0$ onto the union of a longitudinal circle (of the form
+    $\mathbb{S}^1 \times \{z'\}$, around the $\textit{long}$ way) and a meridional circle
+    (of the form $\{w'\} \times \mathbb{S}^1$), and $p_1 = (z_1, w_1)$ is any other point of $\mathbb{T} - p_0$,
+    let $h : \mathbb{T} \to \mathbb{T}$ be the homeomorphism taking $p_1$ to $p_0$ defined by
+    $$ h(z,w) = (z_0z_1^{-1}z, w_0w_1^{-1}w). $$
+
     The composite $h^{-1} \circ \widetilde{H} \circ (h \times \text{id}_I) : (\mathbb{T} - p_1)\times I \to \mathbb{T} -
     p_1$ is a deformation retraction of $\mathbb{T} - p_1$ to the union of a longitudinal circle $\mathbb{S}^1 \times
     \{w_0w_1^{-1}w'\}$ and meridional circle $ \{z_0z_1^{-1}z'\} \times \mathbb{S}^1$.
 </p>
 
 <p>
-    Now thinking of $\mathbb{T}$ as the quotient
+    With this out of the way and now thinking of $\mathbb{T}$ as the quotient
     $$[-1,1]^{2} /\big((-1,t) \sim (1,t) \text{ and } (t,-1) \sim (t,1) \forall t \in [-1,1]\big)$$
     with quotient map $\rho : [-1,1]^2 \to \mathbb{T}$, let $p_0 = \rho(0)$ be the point that we remove from
     $\mathbb{T}$.
 </p>
 
 <p>
-    With this representation of the torus, the longitude and meridian circles of the torus that we will retract to are
-    the images of of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$ under $\rho$.
+    In our current representation of the torus, the longitude and meridian circles of the torus that we will retract to
+    are the images of of $[-1,1] \times \{0,1\}$ and $\{0,1\} \times [-1,1]$ under $\rho$.
+
     These circles correspond to opposite pairs of edges in the boundary square $\partial [-1,1]^{2}$ and they intersect
     once at the image of the four corners of $[-1,1]^{2}$ under $\rho$.
 </p>
@@ -51,17 +55,6 @@
     vector space. For these reasons, we will refer to $[-1,1]^{2}$ as $\mathbb{D}^{2}$ and $\partial [-1,1]^{2}$ as
     $\mathbb{S}^{1}$ for the remainder of the solution.
 </p>
-
-<!-- <p>
-    We define a homotopy $H : (\mathbb{D}^{2} - 0) \times I \to \mathbb{D}^{2} - 0$ from the
-    identity on $\mathbb{D}^{2} - 0$ to $\iota r$ (where $\iota$ is the inclusion $\mathbb{S}^{1}
-    \hookrightarrow \mathbb{D}^{2} - 0$) by having each point follow the ray it determines to its point of
-    intersection with $\mathbb{S}^{1}$ and show that it is a deformation retraction onto $\mathbb{S}^{1}$.
-    Then we show that $H$ descends to a deformation retraction
-    $\widetilde{H} : (\mathbb{T} - 0) \times I \to \mathbb{T} - 0$ onto the longitude and meridian circles
-    of
-    $\mathbb{T}$ that we have chosen, i.e., the image of $\mathbb{S}^{1}$ under $\rho$.
-</p> -->
 
 <p>
     Let $\iota : \mathbb{S}^1 \hookrightarrow \mathbb{D}^2 - 0$ be the standard inclusion. Using our previously defined

@@ -188,20 +188,14 @@ header {
 
 
 #content {
-    display: flex;
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: auto;
-    align-items: center;
-    flex-direction: column;
-
     position: relative;
     padding: 5px 25px 5px 25px;
-    width: 1200px;
-    max-width: 90%;
-    margin: auto;
-}
 
+    /* center */
+    margin: auto;
+    width: 100%;
+    max-width: 1000px;
+}
 
 .content-slideout {
     left: 0px;

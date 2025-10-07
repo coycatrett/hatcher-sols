@@ -4,14 +4,27 @@
     --fadedbabyblue: #89CFF040;
 }
 
-/* TODO: On mobile, link colors do not work. Fix this */
-p {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-}
-
 .exercise-container {
     display: flex;
     flex-direction: column;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.exercise-container a {
+    color: #5ac8fa;
+    text-decoration: underline transparent;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.exercise-container a:hover {
+    color: #82d3ff;
+    text-decoration-color: #82d3ff;
+}
+
+.exercise-container ::selection {
+    background: #5ac8fa;
+    color: #0f1116;
 }
 
 .exercise-title {
@@ -19,14 +32,12 @@ p {
 
     color: var(--hatcherblue);
     font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
 
-    margin: 0px 0px 0px 0px;
+    margin: 0;
 }
 
 .exercise-statement {
-    display: flexbox;
-    flex-direction: column;
-
     font-size: larger;
 
     /* top right bottom left */
@@ -36,7 +47,7 @@ p {
     border-width: 0px 0px 0px 5px;
     border-color: var(--babyblue);
 
-    margin: 0px 0px 0px 0px;
+    margin: 0;
 
     background-color: var(--fadedbabyblue);
 }
@@ -59,9 +70,14 @@ p {
     border-width: 0px 0px 0px 5px;
     border-color: gray;
 
-    margin-top: 0px;
+    margin-top: 0;
     padding: 0em 0.5em 0em 0.5em;
     background-color: #80808010;
+}
+
+.solution-container p {
+    margin: 0.7rem 0;
+    line-height: 1.95rem;
 }
 
 
@@ -86,7 +102,6 @@ details.hint-details {
 details.hint-details summary {
     list-style-type: '? ';
     font-size: large;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: gray;
     margin: -0.5em -0.5em 0;
     padding: 0.5em;
@@ -120,7 +135,6 @@ details.solution-details {
 
 details.solution-details summary {
     font-size: large;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     list-style-type: '+ ';
 
 }
@@ -138,6 +152,11 @@ details.solution-details[open] summary {
 
 details.solution-details[open] summary::after {
     content: attr(summary-open);
+}
+
+details p {
+    margin: 0.7rem 0;
+    font-size: large;
 }
 
 
@@ -163,4 +182,6 @@ iframe {
     aspect-ratio: 16/9;
     border: none;
     border-radius: 8px;
+    margin: 0;
+    padding: 0;
 }
