@@ -28,15 +28,19 @@ header {
     justify-content: space-between;
     align-content: center;
 
-    flex-shrink: 0;
-
     border-style: double;
     border-color: var(--hatcherblue);
     border-width: 5px;
 
-    padding: 1px 1px 1px 1px;
+    /* padding: 1px 1px 1px 1px; */
     height: 74px;
     margin-bottom: 0.25em;
+}
+
+@media (max-width: 768px) {
+    header {
+        width: 100%;
+    }
 }
 
 
