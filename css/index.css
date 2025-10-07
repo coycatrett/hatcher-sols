@@ -37,12 +37,6 @@ header {
     margin-bottom: 0.25em;
 }
 
-@media (max-width: 768px) {
-    header {
-        width: 100%;
-    }
-}
-
 
 #page-title {
     /* TODO Figure out what the heck vw and rem mean... */
