@@ -207,7 +207,7 @@ header {
     padding: 5px 25px;
 
     /* center */
-    max-width: 50%;
+    max-width: min(50%, 1200px);
     margin: auto;
 }
 
