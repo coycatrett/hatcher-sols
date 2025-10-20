@@ -7,6 +7,8 @@
 .exercise-container {
     display: flex;
     flex-direction: column;
+    max-width: min(100%, 1000px);
+    margin: auto;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 

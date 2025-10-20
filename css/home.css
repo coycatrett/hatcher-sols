@@ -1,23 +1,27 @@
 #home-container {
-    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    /* align-content: center; */
+    max-width: 100%;
     margin: auto;
+    /* padding: 0 10%; */
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 
-#home-container .home-content {
-    max-width: 720px;
-    padding: 2rem 2.5rem;
-    margin-top: 2rem;
+#home-content {
+    position: relative;
+    max-width: 100%;
+    margin: auto;
 }
 
 
 #home-container h1 {
+    max-width: 100%;
+    margin: auto;
     font-family: 'Times New Roman', Times, serif;
     font-size: 2.4rem;
     font-weight: 600;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
     text-align: center;
 }
 

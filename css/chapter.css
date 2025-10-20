@@ -1,5 +1,6 @@
 /* css for chapter pages */
 .exercise-ul {
+    max-width: min(100%, 1000px);
     list-style: none;
 }
 
