@@ -1,5 +1,6 @@
 #home-container {
-    max-width: 1000px;
+    max-width: 90%;
+    margin: auto;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
