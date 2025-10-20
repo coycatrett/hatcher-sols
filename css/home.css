@@ -60,19 +60,3 @@
     background: #5ac8fa;
     color: #0f1116;
 }
-
-
-@media (max-width: 600px) {
-    #home-container .home-content {
-        padding: 1.5rem;
-    }
-
-    #home-container h1 {
-        font-size: 2rem;
-    }
-
-    #home-container p,
-    #home-container li {
-        font-size: 1rem;
-    }
-}
