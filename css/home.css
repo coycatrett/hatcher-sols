@@ -60,3 +60,10 @@
     background: #5ac8fa;
     color: #0f1116;
 }
+
+@media screen {
+    #home-container h1 {
+        max-width: 100%;
+        font-size: large;
+    }
+}
