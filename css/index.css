@@ -103,8 +103,8 @@ header {
 .nav-menu {
     position: relative;
     height: auto;
-    width: 12vw;
-    margin-left: -12vw;
+    width: 275px;
+    margin-left: -275px;
     transition: margin-left 0.5s ease 0.2s;
     flex-shrink: 0;
     /* closing transition */
@@ -223,18 +223,19 @@ header {
 }
 
 .content-slideout {
-    left: 0px;
+    margin-left: 0;
     transition: left 0.5s ease 0.2s;
 }
 
 
 .content-slideout.active {
-    left: 250px;
+    margin-left: 275px;
 }
 
 @media screen and (max-width: 600px) {
-    html {
+    #page {
         overflow-x: hidden;
+
     }
 
     #page-title {
