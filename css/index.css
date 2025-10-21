@@ -94,14 +94,23 @@ header {
     column-gap: 0.25em;
 }
 
+/* #nav-container {
+    width: 275px;
+    position: relative;
+} */
+
+#page {
+    display: flex;
+    flex-direction: row;
+}
 
 .nav-menu {
-    position: fixed;
+    position: relative;
     height: auto;
     width: 275px;
-    left: -275px;
-    z-index: 1000;
-    transition: left 0.5s ease 0.2s;
+    margin-left: -275px;
+    transition: margin-left 0.5s ease 0.2s;
+    flex-shrink: 0;
     /* closing transition */
     /* opening transition */
     /* property name | duration | transition function | delay*/
@@ -109,7 +118,7 @@ header {
 
 
 .nav-menu.active {
-    left: 0px;
+    margin-left: 0;
 }
 
 
