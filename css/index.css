@@ -103,8 +103,8 @@ header {
 .nav-menu {
     position: relative;
     height: auto;
-    width: 275px;
-    margin-left: -275px;
+    width: 12vw;
+    margin-left: -12vw;
     transition: margin-left 0.5s ease 0.2s;
     flex-shrink: 0;
     /* closing transition */
