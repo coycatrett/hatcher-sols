@@ -40,8 +40,8 @@ header {
 
 
 #page-title {
-    /* TODO Figure out what the heck vw and rem mean... */
-    font-size: clamp(0.75rem, 4vw, 3rem);
+    /* font-size: clamp(0.75rem, 4vw, 3rem); */
+    font-size: x-large;
     font-family: 'Times New Roman', Times, serif;
     color: var(--hatcherdarkblue);
     -webkit-text-stroke: 1px black;
@@ -222,8 +222,8 @@ header {
 }
 
 @media screen {
-    header {
-        font-size: small;
+    #page-title {
+        font-size: medium;
     }
 
     #content {
