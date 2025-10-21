@@ -5,9 +5,12 @@
 }
 
 .exercise-container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
+    flex-shrink: 0; */
+    overflow-x: hidden;
     max-width: min(100%, 1000px);
+    width: 1000px;
     margin: auto;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
