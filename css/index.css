@@ -222,6 +222,10 @@ header {
 }
 
 @media screen {
+    header {
+        font-size: medium;
+    }
+
     #content {
         max-width: 90%;
     }
