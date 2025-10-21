@@ -19,9 +19,9 @@ body {
 }
 
 
-body.inactive {
+/* body.inactive {
     overflow-y: hidden;
-}
+} */
 
 
 header {
@@ -213,6 +213,8 @@ header {
     padding: 5px 25px;
     overflow: auto;
     flex: 75%;
+    /* min-height: 100%; */
+
 
     /* center */
     max-width: min(50%, 1200px);
@@ -236,7 +238,6 @@ header {
     html {
         overflow-x: hidden;
         scroll-behavior: smooth;
-
     }
 
     #page-title {
