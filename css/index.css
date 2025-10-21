@@ -223,7 +223,7 @@ header {
 
 @media screen {
     header {
-        font-size: medium;
+        font-size: small;
     }
 
     #content {
