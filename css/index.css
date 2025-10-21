@@ -222,6 +222,10 @@ header {
 }
 
 @media screen {
+    html {
+        overflow-x: hidden;
+    }
+
     #page-title {
         font-size: medium;
     }
