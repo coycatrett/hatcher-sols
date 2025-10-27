@@ -11,7 +11,7 @@ export const toc = {
         sections: {
             1: {
                 title: '1.1. Basic Constructions',
-                exercises: [1, 2],
+                exercises: [1],
                 extras: []
             },
             2: {

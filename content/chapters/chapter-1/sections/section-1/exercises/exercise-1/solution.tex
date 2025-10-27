@@ -1,0 +1,74 @@
+<p>
+    Throughout, let $X$ be a topological space; for a path $f : I \to X$, write $f : a \to b$ where $a = f(0)$ and $b = f(1)$.
+</p>
+
+<p>
+    <b>Proposition 1.3.</b> states that the fundamental group of $X$ based at a point is a group with respect to the product of concatenation of loops up to path-homotopy. In the proof of <b>Proposition 1.3.</b>, Hatcher demonstrates the more general statement that concatenation up to path-homotopy is an associative partial binary operation on paths in $X$, such that each path has a left and right identity and is invertible with respect to the left and right identities.
+</p>
+
+<p>
+    Explicitly, the proposition shows that for all paths $f : a \to b$ in $X$,
+    <ul style="margin: 0; padding-top: 0;">
+        <li>
+            <b>Left and Right Identities:</b> The constant paths $a : a \to a$ and $b : b \to b$ are left and right identities of $f$, respectively, that is, they satisfy $$\begin{align*}a \cdot f &\simeq f \tag{left identity}\\ f \cdot b &\simeq f\tag{right identity}\end{align*}$$ and are unique up to path-homotopy.
+        </li>
+        <li>
+            <b>Inverses:</b> The inverse path $\overline{f} : b \to a$ satisfies 
+            $$\begin{align*}\overline{f} \cdot f &\simeq b \tag{left inverse}\\ f \cdot \overline{f} &\simeq a \tag{right inverse}\end{align*}$$ and is unique up to path-homotopy.
+        </li>
+    </ul>
+</p>
+
+<p>
+    Assume the paths $f_i,g_i : I \to X$ lie in $X$ and $f_i$ and $g_i$ are
+    composable, that is, $f_i(1) = g_i(0)$. 
+</p>
+
+<p>
+    Write $f_i : a \to b$ and $g_i : b \to c$ with $a = f_i(0)$, $b = f_i(1) =
+    g_i(0)$, and $c = g_i(1)$.
+</p>
+
+<p>
+    First, recall that if $g_0 \simeq g_1$, then $\overline g_0 \simeq \overline g_1$, since homotopy classes are stable under reparametrization. This can also be seen in at least two ways by applying <b>Proposition 1.3.</b>. 
+</p>
+
+<p>
+    Making repeated use of <b>Proposition 1.3.</b>, we see that
+</p>
+
+$$
+\begin{align*}
+    f_0
+    &\simeq f_0 \cdot b \tag{right identity} \\
+    &\simeq f_0 \cdot (g_0  \cdot \overline{g}_0) \tag{right inverse} \\
+    &\simeq (f_0 \cdot g_0) \cdot \overline{g}_0  \tag{associativity} \\
+    &\simeq (f_1 \cdot g_1) \cdot \overline{g}_0  \tag{hypothesis} \\
+    &\simeq (f_1 \cdot g_1) \cdot \overline{g}_1  \tag{hypothesis + well-defined inverse}\\
+    &\simeq f_1 \cdot (g_1  \cdot \overline{g}_1) \tag{associativity} \\
+    &\simeq f_1 \cdot b \tag{right inverse} \\
+    &\simeq f_1 \tag{right identity}
+\end{align*}
+$$
+
+<p>
+    which completes the proof.
+</p>
+
+
+<!--
+// TODO Blog about groupoids
+<h3>Extra: Groupoids</h3>
+
+<p>
+    The data of the topological space $X$ along with concatenation of paths in $X$ up to path-homotopy appears very algebraic in form, as exhibited above. In fact, this data is the algebraic data of a category.
+</p>
+
+<p>
+    Suppose $X$ is a set; suppose that for any two elements $a$ and $b$ of $X$, there is a (potentially uninhabited) set of "paths" $\mathsf{Hom}(a,b)$ such that $\mathsf{Hom}(a,a)$ has a distinguished element $\mathsf{id}_a$ for each $a \in X$. Finally, suppose there is an associative partial binary operation, concatenation, on all paths in $X$ such that $\mathsf{id}_a \cdot f = f$ and $f \cdot \mathsf{id}_b = f$ for all $f \in \mathsf{Hom}(a,b)$. There is a category whose objects are the elements of $X$, and whose morphisms are the elements of $\mathsf{Hom}(a,b)$ for all $a,b \in X$. Conversely, given any (small) category, we can recover $X$, the $\mathsf{Hom}$-sets, and the identity morphisms satisfying the above conditions.
+</p>
+
+<p>
+    If we assume further that each morphism in this category is invertible, this category is what is called a groupoid, a category in which every morphism is invertible. If $X$ only has a single object $\bullet$, then $\mathsf{Hom}(\bullet,\bullet)$ is a group, and thus a groupoid is a many-object group. If we drop the condition that each morphism in $\mathsf{Hom}(\bullet,\bullet)$ is invertible, then $\mathsf{Hom}(\bullet,\bullet)$ forms a monoid. From here, we see that may jokingly call a category a monoidoid, since it is a many-object monoid.
+</p>
+-->

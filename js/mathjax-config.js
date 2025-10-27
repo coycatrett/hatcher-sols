@@ -29,7 +29,10 @@ window.MathJax = {
     macros: {},
   },
   output: {
-    displayOverflow: 'linebreak',     // break long lines
+    linebreaks: {
+      inline: true,
+    },
+    displayOverflow: 'scroll',     // break long lines
     // linebreaks: {                  // options for when overflow is linebreak
     //   inline: true,                // true for browser-based breaking of in-line equations
     //   width: '100%',               // a fixed size or a percentage of the container width

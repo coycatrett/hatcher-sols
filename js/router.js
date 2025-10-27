@@ -81,8 +81,8 @@ const gen_content = {
                     : `Exercise ${chapter}.${section + 1}.${exercise}`;
 
                 const statement_path = chapter_is_0
-                    ? `${qual_path}/exercises/exercise-${exercise}/statement.html`
-                    : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.html`;
+                    ? `${qual_path}/exercises/exercise-${exercise}/statement.tex`
+                    : `${qual_path}/sections/section-${section + 1}/exercises/exercise-${exercise}/statement.tex`;
 
                 const href = chapter_is_0
                     ? `/chapter-${chapter}/exercise-${exercise}`
@@ -106,8 +106,8 @@ const gen_content = {
 
         const template_fragment = cloneTemplate('solution');
 
-        const solution_path = `${qual_path}/solution.html`;
-        const statement_path = `${qual_path}/statement.html`;
+        const solution_path = `${qual_path}/solution.tex`;
+        const statement_path = `${qual_path}/statement.tex`;
         const hints_json_path = `${qual_path}/hints/hints.json`;
 
         const paths = [solution_path, statement_path, hints_json_path];
@@ -126,7 +126,7 @@ const gen_content = {
         const hints = [];
         const num_hints = hints_json['num_hints'];
         for (let i = 1; i <= num_hints; i++) {
-            const hint_path = `${qual_path}/hints/hint-${i}.html`;
+            const hint_path = `${qual_path}/hints/hint-${i}.tex`;
             const hint = await fetchFragment(hint_path);
             hints.push(hint);
         }
