@@ -166,27 +166,29 @@ details p {
 
 
 .img-container {
-    align-self: center;
+    display: block;
+    max-width: 50%;
+    height: auto;
+    margin: auto;
 }
 
 
 .img-container img {
     display: block;
-    align-self: center;
+    margin: auto;
     width: 100%;
-    max-width: 100%;
+    max-width: 85%;
     height: auto;
     border-radius: 8px;
 }
 
 iframe {
     display: block;
-    align-self: center;
-    width: 60%;
-    max-width: 100%;
+    width: 100%;
+    max-width: 50%;
+    margin: auto;
+    height: auto;
     aspect-ratio: 16/9;
     border: none;
     border-radius: 8px;
-    margin: 0;
-    padding: 0;
 }
