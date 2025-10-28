@@ -30,7 +30,7 @@ window.MathJax = {
   },
   output: {
     linebreaks: {
-      inline: true,
+      inline: false,
     },
     displayOverflow: 'scroll',     // break long lines
     // linebreaks: {                  // options for when overflow is linebreak
